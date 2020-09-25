@@ -23,7 +23,23 @@
             </tr>
           </thead>
           <tbody>
-            
+            @if (count($data['barangmasuk']) == 0 ) 
+              <td colspan="10" class="text-center"> 
+                - 
+              </td>
+            @else 
+              @foreach($data['barangmasuk'] as $key=>$val)
+              <tr> 
+                <td> {{$val->id}} </td>
+                <td> {{$val->tgl_pembelian}} </td>
+                <td> {{$val->jumlah_barang}} </td>
+                <td> {{$val->kategori}} </td>
+                <td> {{$val->merk}} </td>
+                <td> {{$val->model}} </td>
+                <td> {{$val->penjual}} </td>
+              </tr>
+              @endforeach
+            @endif
           </tbody>
         </table>
   </div>
@@ -52,26 +68,61 @@
               <button type="submit" class="btn btn-primary">Submit</button>
           </form> -->
 
-          <form method="POST" action="">
+          <form method="POST" action="{{ route('barangmasuk.store') }}">
           {{ csrf_field() }}
             <div class="form-group">
               <label for="staff_nama"> 
                 Tanggal Pembelian :
               </label>
-              <input type="text" class="form-control datepicker_class" value="" required="">
-
+              <input type="text" class="form-control datepicker_class" name="tgl_pembelian" required="">
             </div>
 
             <div class="form-group">
               <label for="staff_nama"> 
-                Payment Detail :
+                Jumlah Barang :
               </label>
-              <input class="form-control" type="text" id="payment_detail" name="payment_detail"
-              placeholder="eg : Giro no BRI-XXX, BCA-XXX">
+              <input class="form-control" type="number" name="jumlah_barang" required="">
             </div>
 
-            <button type="submit" class="btn btn-block btn-danger">
-              UPDATE INVOICE STATUS
+            <div class="form-group">
+              <label for="staff_nama"> 
+                Kategori : 
+              </label>
+              <select class="form-control" name="kategori" required="">
+                <option value="1"> AC </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="staff_nama"> 
+                Merk : 
+              </label>
+              <select class="form-control" name="merk" required="">
+                <option value="1"> Sharp </option>
+                <option value="2"> Daikin </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="staff_nama"> 
+                Model : 
+              </label>
+              <select class="form-control" name="model" required="">
+                <option value="1"> R32 </option>
+                <option value="2"> R410 </option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="staff_nama"> 
+                Penjual :
+              </label>
+              <input type="text" class="form-control" name="penjual" required="">
+
+            </div>
+
+            <button type="submit" class="btn btn-block btn-primary">
+              TAMBAH BARANG MASUK
             </button>
           </form>
         </div>

@@ -1,12 +1,23 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\BarangMasuk;
+use App\Stock;
+
 use Illuminate\Http\Request;
+use Faker\Factory as Faker;
 
 class BarangMasukController extends Controller
-{
+{   
+    protected $faker;
+    protected $redirectTo      = 'barangmasuk.index';
+
+    public function __construct(){
+        $this->faker    = Faker::create();
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +25,9 @@ class BarangMasukController extends Controller
      */
     public function index() {
 
-        $data = [];
+        $data = [
+            "barangmasuk" => BarangMasuk::all(),
+        ];
         # return view('layouts.test', ['data' => $data]);
 
         return view('barangmasuk.index', ['data' => $data]);
@@ -38,8 +51,46 @@ class BarangMasukController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        try {
+            $data = new BarangMasuk;
+
+            $data->tgl_pembelian = $request->tgl_pembelian;
+            $data->jumlah_barang = $request->jumlah_barang;
+            $data->kategori = $request->kategori;
+            $data->merk = $request->merk;
+            $data->model = $request->model;
+            $data->penjual = $request->penjual;
+            $data->uuid = $this->faker->uuid;
+
+            $full_each_data = array();
+            for ($x = 1; $x <= $data->jumlah_barang; $x++) {
+                $each_data = array();
+                $each_data["kategori"] = $request->kategori;
+                $each_data["merk"] = $request->merk;
+                $each_data["model"] = $request->model;
+                $each_data["penjual"] = $request->penjual;
+                $each_data["uuid_barang_masuk"] = $data->uuid;
+                $each_data["uuid"] = $this->faker->uuid;
+                $each_data["barcode"] = $this->faker->uuid;
+                $each_data["created_by"] = Auth::user()->id;
+                $each_data["updated_by"] = Auth::user()->id;
+
+                array_push($full_each_data, $each_data);
+                # $full_each_data.append($each_data);
+
+            } 
+
+
+            $data->save();
+            Stock::insert($full_each_data);
+            $request->session()->flash('alert-success', "data ".$data->tgl_pembelian.' has been created');
+            return redirect()->route($this->redirectTo,"search=on&uuid=".$data->uuid);
+        }
+        catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
     }
 
     /**
