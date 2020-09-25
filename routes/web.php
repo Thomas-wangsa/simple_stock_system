@@ -16,6 +16,10 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-Auth::routes(['register' => false]);
+
+
+Route::resources([
+    'barangmasuk' => 'BarangMasukController'
+]);
 
 Route::get('/home', 'HomeController@index')->name('home');
