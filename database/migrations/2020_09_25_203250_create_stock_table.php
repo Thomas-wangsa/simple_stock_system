@@ -23,6 +23,13 @@ class CreateStockTable extends Migration
             $table->date('tgl_pembelian'); 
             $table->string('uuid_barang_masuk', 100);
 
+            $table->string('pembeli', 100)->nullable();
+            $table->string('no_hp_pembeli', 100)->nullable();
+            $table->date('tgl_penjualan')->nullable();
+            $table->mediumInteger('durasi_garansi')->unsigned()->nullable();
+            $table->mediumInteger('harga_jual')->unsigned()->nullable(); 
+            $table->string('uuid_barang_keluar', 100)->nullable();
+
 
             $table->uuid('uuid');
             $table->string('barcode', 100);

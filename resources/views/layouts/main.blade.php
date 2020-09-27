@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'simple stock system') }}</title>
 
     
 
@@ -33,7 +33,7 @@
     <div id="app">
         <nav class="navbar navbar-expand-md bg-dark navbar-dark">
           <!-- Brand -->
-          <a class="navbar-brand" href="{{ route('home') }}">Navbar</a>
+          <a class="navbar-brand" href="{{ route('home') }}"> Home </a>
 
           <!-- Toggler/collapsibe Button -->
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
@@ -44,10 +44,14 @@
           <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('barangmasuk.index') }}">Barang Masuk</a>
+                <a 
+                class="nav-link <?php if(Request::path() == "barangmasuk") {echo "active";} ?>" 
+                href="{{ route('barangmasuk.index') }}">Barang Masuk</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a 
+                class="nav-link <?php if(Request::path() == "barangkeluar") {echo "active";} ?>" 
+                href="{{ route('barangkeluar.index') }}"> Barang Keluar </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#">Link</a>

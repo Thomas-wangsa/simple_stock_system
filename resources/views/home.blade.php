@@ -129,7 +129,7 @@
   function submit_barang_keluar() {
 
     if(selected_item.length > 0) {
-      alert("true");
+      window.location = "{{ route('barangkeluar.create')}}";
     } else {
       alert("pilih barang terlebih dahulu;");
     }
