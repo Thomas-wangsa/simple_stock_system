@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
@@ -20,6 +20,8 @@
               <th>Merk</th>
               <th>Model</th>
               <th>Penjual</th>
+              <th>Created At</th>
+              <th> Info </th>
             </tr>
           </thead>
           <tbody>
@@ -27,17 +29,39 @@
               <td colspan="10" class="text-center"> 
                 - 
               </td>
-            @else 
+            @else
+              <?php $no = 1; ?> 
               @foreach($data['barangmasuk'] as $key=>$val)
               <tr> 
-                <td> {{$val->id}} </td>
+                <td> {{$no}} </td>
                 <td> {{$val->tgl_pembelian}} </td>
                 <td> {{$val->jumlah_barang}} </td>
-                <td> {{$val->kategori}} </td>
-                <td> {{$val->merk}} </td>
-                <td> {{$val->model}} </td>
+                <td> 
+                  @if($val->kategori == 1) 
+                    AC
+                  @else
+                    -
+                  @endif 
+                </td>
+                <td>
+                  @if($val->merk == 1) 
+                    Sharp
+                  @else
+                    Daikin
+                  @endif 
+                </td>
+                <td>
+                  @if($val->model == 1) 
+                    R32
+                  @else
+                    R410
+                  @endif 
+                </td>
                 <td> {{$val->penjual}} </td>
+                <td> {{$val->created_at}} </td>
+                <td> <button class="btn btn-primary" onclick="alert('on progress')">check data</button></td>
               </tr>
+              <?php $no++; ?>
               @endforeach
             @endif
           </tbody>

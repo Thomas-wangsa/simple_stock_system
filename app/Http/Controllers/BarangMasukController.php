@@ -8,6 +8,7 @@ use App\Stock;
 
 use Illuminate\Http\Request;
 use Faker\Factory as Faker;
+use Exception;
 
 class BarangMasukController extends Controller
 {   
@@ -53,6 +54,15 @@ class BarangMasukController extends Controller
     public function store(Request $request)
     {   
         try {
+
+            if ($request->jumlah_barang < 1) {
+                throw new Exception('Please input the quantity;');
+            }
+
+            if ($request->jumlah_barang > 5000) {
+                throw new Exception('Quantity lebih dari limit, please contact the administrator;');
+            }
+
             $data = new BarangMasuk;
 
             $data->tgl_pembelian = $request->tgl_pembelian;
@@ -62,17 +72,25 @@ class BarangMasukController extends Controller
             $data->model = $request->model;
             $data->penjual = $request->penjual;
             $data->uuid = $this->faker->uuid;
+            $data->created_by = Auth::user()->id;
+            $data->updated_by = Auth::user()->id;
 
             $full_each_data = array();
             for ($x = 1; $x <= $data->jumlah_barang; $x++) {
+                $now = now();
+
                 $each_data = array();
                 $each_data["kategori"] = $request->kategori;
                 $each_data["merk"] = $request->merk;
                 $each_data["model"] = $request->model;
+                $each_data["status"] = 1;
                 $each_data["penjual"] = $request->penjual;
+                $each_data["tgl_pembelian"] = $request->tgl_pembelian;
                 $each_data["uuid_barang_masuk"] = $data->uuid;
                 $each_data["uuid"] = $this->faker->uuid;
                 $each_data["barcode"] = $this->faker->uuid;
+                $each_data["created_at"] = now();
+                $each_data["updated_at"] = now();
                 $each_data["created_by"] = Auth::user()->id;
                 $each_data["updated_by"] = Auth::user()->id;
 

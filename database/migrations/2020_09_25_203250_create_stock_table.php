@@ -18,7 +18,9 @@ class CreateStockTable extends Migration
             $table->integer('kategori')->unsigned();
             $table->integer('merk')->unsigned(); 
             $table->integer('model')->unsigned();
+            $table->integer('status')->unsigned();
             $table->string('penjual', 100);
+            $table->date('tgl_pembelian'); 
             $table->string('uuid_barang_masuk', 100);
 
 

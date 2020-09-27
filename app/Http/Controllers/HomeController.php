@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Stock;
 
 class HomeController extends Controller
 {
@@ -21,8 +22,20 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
-    {
-        return view('home');
+    public function index(Request $request)
+    {   
+
+        $rule = $request->input('rule');
+        
+        $stock = array();
+        if(!$rule) {
+            $stock = Stock::all();
+        } else {
+            $stock = Stock::where("status",1)->get();
+        }
+
+
+        $data = ["stock" => $stock];
+        return view('home', ['data' => $data]);
     }
 }
