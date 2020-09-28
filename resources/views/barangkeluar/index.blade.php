@@ -23,7 +23,28 @@
             </tr>
           </thead>
           <tbody>
-            
+            @if (count($data['barangkeluar']) == 0 ) 
+              <td colspan="10" class="text-center"> 
+                - 
+              </td>
+            @else
+              <?php $no = 1; ?> 
+              @foreach($data['barangkeluar'] as $key=>$val)
+              <tr> 
+                <td> {{$no}} </td>
+                <td> {{$val->tgl_penjualan}} </td>
+                <td> {{$val->jumlah_barang}} </td>
+
+                <td> {{$val->pembeli}} </td>
+                <td> {{$val->no_hp_pembeli}} </td>
+                <td> {{$val->durasi_garansi}} </td>
+                <td> {{$val->total_harga}} </td>
+                <td> {{$val->created_at}} </td>
+                <td> <button class="btn btn-primary" onclick="alert('on progress')">check data</button></td>
+              </tr>
+              <?php $no++; ?>
+              @endforeach
+            @endif
           </tbody>
         </table>
   </div>

@@ -1,16 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\BarangKeluar;
 use Illuminate\Http\Request;
 use Exception;
 use App\Stock;
+use Faker\Factory as Faker;
 
 
 class BarangKeluarController extends Controller
 {   
     protected $redirectTo      = 'barangkeluar.index';
+    protected $redirectToCreate      = 'barangkeluar.create';
+
+    public function __construct(){
+        $this->faker    = Faker::create();
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -63,8 +71,63 @@ class BarangKeluarController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {   
+        try {
+            $stock = $request->stock_list;
+
+            if(!$stock) {
+                throw new Exception('Please select the stock item;');
+            }
+
+
+            $stock_array = explode(",", $stock);
+
+            # validation
+            $stock_data = Stock::whereIn('id',$stock_array)->get();
+
+            foreach ($stock_data as $key => $value) {
+                if($value["harga_jual"] < 1) {
+                    throw new Exception('harga stock : '.$value["barcode"]." masih kosong");
+                }
+            }
+
+            $barangkeluar = new BarangKeluar;
+            $barangkeluar->tgl_penjualan = $request->tgl_penjualan;
+            $barangkeluar->jumlah_barang = count($stock_data);
+            $barangkeluar->pembeli = $request->pembeli;
+            $barangkeluar->no_hp_pembeli = $request->no_hp_pembeli;
+            $barangkeluar->durasi_garansi = $request->durasi_garansi;
+            $barangkeluar->total_harga = $request->total_harga;
+            $barangkeluar->uuid = $this->faker->uuid;
+            $barangkeluar->created_by = Auth::user()->id;
+            $barangkeluar->updated_by = Auth::user()->id;
+
+
+            $barangkeluar->save();
+            $result = Stock::whereIn('id', $stock_array)
+            ->where('status', 1)
+            ->update(
+                [   
+                    'tgl_penjualan' => $request->tgl_penjualan,
+                    'pembeli' => $request->pembeli,
+                    'no_hp_pembeli' => $request->no_hp_pembeli,
+                    'durasi_garansi' => $request->durasi_garansi,
+                    'uuid_barang_keluar' => $barangkeluar->uuid,
+                    'status' => 2
+                ]
+            );
+
+            return redirect()->route($this->redirectTo);
+            # dd($barangkeluar); 
+            
+
+
+
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            // return redirect()->route($this->redirectToCreate);
+            return redirect()->route($this->redirectToCreate,["stock"=>$request->stock_list]);
+        }
     }
 
     /**

@@ -97,7 +97,9 @@
                   @endif 
                 </td>
                 <td> {{$val->penjual}} </td>
-                <td> {{$val->barcode}} </td>
+                <td class="<?php if($val->status == 2) {echo "text-danger";} ?>"> 
+                  {{$val->barcode}} 
+                </td>
                 </tr>
                 <?php $no++; ?>
               @endforeach

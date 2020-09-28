@@ -24,3 +24,6 @@ Route::resources([
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::post("/ajax/updatestockprice","AjaxController@updatestockprice")->name('ajax.updatestockprice');
+Route::post("/ajax/updatetotalstockprice","AjaxController@updatetotalstockprice")->name('ajax.updatetotalstockprice');
