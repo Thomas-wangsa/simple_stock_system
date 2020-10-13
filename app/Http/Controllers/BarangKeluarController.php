@@ -80,7 +80,10 @@ class BarangKeluarController extends Controller
             }
 
 
-            $stock_array = explode(",", $stock);
+            $stock_array_raw = explode(",", $stock);
+            $stock_array = Stock::whereIn('id', $stock_array_raw)->where('status',1)->pluck('id');
+            // dd($stock_array);
+
 
             # validation
             $stock_data = Stock::whereIn('id',$stock_array)->get();

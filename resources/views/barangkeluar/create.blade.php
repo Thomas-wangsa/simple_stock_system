@@ -120,10 +120,10 @@
                 </td>
                 <td> {{$val->barcode}} </td>
                 <td>
-                  <input class="form-control" type="number" id="row_{{$val->id}}" value="{{$val->harga_jual}}">
+                  <input class="form-control" type="number" id="row_{{$val->uuid}}" value="{{$val->harga_jual}}">
                 </td>
                 <td> 
-                  <div class="btn btn-success" onclick="update_harga('row_{{$val->id}}')"> set harga </div>
+                  <div class="btn btn-success" id="btn_row_{{$val->uuid}}" onclick="update_harga('row_{{$val->uuid}}')"> set harga </div>
                 </td>
               </tr>
               <?php $no++; ?> 
@@ -144,6 +144,7 @@
   });
 
   function update_harga(argument) {
+    $("#btn_"+argument).hide();
     var new_price = $("#"+argument).val();
     if(new_price < 1) {
       alert("set harga salah;");
@@ -165,6 +166,7 @@
           alert(response.messages);
         } else { 
           update_total_harga();
+          $("#btn_"+argument).show();
         } 
       }
     });

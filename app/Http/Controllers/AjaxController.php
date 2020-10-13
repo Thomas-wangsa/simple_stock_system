@@ -13,7 +13,7 @@ class AjaxController extends Controller
     		$stock_id = $request->argument;
     		$new_price = $request->new_price;
 
-    		$result = Stock::where('id', $stock_id)
+    		$result = Stock::where('uuid', $stock_id)
           	->where('status', 1)
           	->update(['harga_jual' => $new_price]);
 
