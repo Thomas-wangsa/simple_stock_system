@@ -7,34 +7,23 @@
     <div class="table-responsive">
       <!-- Button to Open the Modal -->
 
-      @if(!app('request')->input('rule'))
-      <a href="{{route('home')}}?rule=barang_keluar">
-        <button type="button" class="btn btn-danger">
-        barang keluar
-        </button>
-      </a>
-      @endif
 
-
-      @if(app('request')->input('rule') == "barang_keluar")
-      <div class="btn btn-warning" onclick="submit_barang_keluar()">
+      <div class="btn btn-warning" id="btn_submit_barang_keluar" onclick="submit_barang_keluar()" >
       submit barang keluar
       </div>
-      @endif
 
-      @if(app('request')->input('rule'))
       <a href="{{route('home')}}">
-        <button type="button" class="btn btn-secondary">
+        <button type="button" id="btn_reset_filter"  class="btn btn-secondary">
         Reset Filter
         </button>
       </a>
-      @endif
       
 
       <table class="table table-bordered" style="margin-top: 10px">
           <thead>
             <tr>
-              @if( app('request')->input('rule') == "barang_keluar")
+
+              @if(!app('request')->input('trigger') )
               <th> </th>
               @endif
               <th> No </th>
@@ -43,6 +32,7 @@
               <th> Model</th>
               <th> Status </th>
               <th> Penjual </th>
+              <th> Pembeli </th>
               <th> Barcode </th>
             </tr>
           </thead>
@@ -56,10 +46,9 @@
               <?php $no = 1; ?>
               @foreach($data['stock'] as $key=>$val)
                 <tr>
-                @if( app('request')->input('rule') == "barang_keluar")
+                @if(!app('request')->input('trigger') )
                 <td>  <input type="checkbox" onclick='handleClick("<?php echo $val->id;?>");'>&nbsp; </td>
                 @endif
-
 
                 <td> {{$no}} </td>
                 <td> 
@@ -97,6 +86,7 @@
                   @endif 
                 </td>
                 <td> {{$val->penjual}} </td>
+                <td> {{$val->pembeli}} </td>
                 <td class="<?php if($val->status == 2) {echo "text-danger";} ?>"> 
                   {{$val->barcode}} 
                 </td>
@@ -115,6 +105,15 @@
 
 <script type="text/javascript">
 
+  $("#btn_submit_barang_keluar").hide();
+  $("#btn_reset_filter").hide();
+
+  var trigger =  "{{ app('request')->input('trigger') }}"
+  
+  if(trigger == "on") {
+    $("#btn_reset_filter").show();
+  }
+
   var selected_item = [];
 
   function handleClick(id) {
@@ -124,6 +123,7 @@
     } else {
       selected_item.push(id);
     }
+    $("#btn_submit_barang_keluar").show();
     console.log(selected_item);
   }
 

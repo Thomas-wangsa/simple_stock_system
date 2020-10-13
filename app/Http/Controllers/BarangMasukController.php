@@ -59,7 +59,7 @@ class BarangMasukController extends Controller
                 throw new Exception('Please input the quantity;');
             }
 
-            if ($request->jumlah_barang > 5000) {
+            if ($request->jumlah_barang > 2000) {
                 throw new Exception('Quantity lebih dari limit, please contact the administrator;');
             }
 

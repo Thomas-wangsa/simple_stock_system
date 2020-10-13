@@ -59,7 +59,7 @@
                 </td>
                 <td> {{$val->penjual}} </td>
                 <td> {{$val->created_at}} </td>
-                <td> <button class="btn btn-primary" onclick="alert('on progress')">check data</button></td>
+                <td> <button class="btn btn-primary" onclick="check_data('{{$val->uuid}}')">check data</button></td>
               </tr>
               <?php $no++; ?>
               @endforeach
@@ -164,3 +164,10 @@
 </div>
 @endsection
 
+<script type="text/javascript">
+
+  function check_data(uuid) {
+   window.open("{{ route('home')}}?trigger=on&trigger_from=barang_masuk&uuid="+uuid)
+  }
+
+</script>

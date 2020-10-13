@@ -24,15 +24,24 @@ class HomeController extends Controller
      */
     public function index(Request $request)
     {   
+        $trigger = $request->input('trigger');
 
-        $rule = $request->input('rule');
-        
         $stock = array();
-        if(!$rule) {
-            $stock = Stock::all();
+        
+        if($trigger) {    
+            $trigger_from = $request->input('trigger_from');
+            $uuid = $request->input('uuid');
+            if($trigger_from == "barang_masuk") {
+                $stock = Stock::where("uuid_barang_masuk",$uuid)->get();
+            } else if ($trigger_from == "barang_keluar"){
+                $stock = Stock::where("uuid_barang_keluar",$uuid)->get();
+            }
+
         } else {
             $stock = Stock::where("status",1)->get();
         }
+
+        
 
 
         $data = ["stock" => $stock];
