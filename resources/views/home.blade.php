@@ -12,7 +12,7 @@
       submit barang keluar
       </div>
 
-      <div class="btn btn-danger btn-block" id="btn_submit_barang_retur" onclick="submit_barang_keluar()" hidden="">
+      <div class="btn btn-danger btn-block" id="btn_submit_barang_retur" onclick="submit_barang_retur()" hidden="">
       submit barang retur
       </div>
 
@@ -283,6 +283,17 @@
 
     if(selected_item.length > 0) {
       window.location = "{{ route('barangkeluar.create')}}?stock="+selected_item;
+    } else {
+      alert("pilih barang terlebih dahulu;");
+    }
+  }
+
+
+
+  function submit_barang_retur() {
+
+    if(selected_item.length > 0) {
+      window.location = "{{ route('barangretur.create')}}?stock="+selected_item;
     } else {
       alert("pilih barang terlebih dahulu;");
     }

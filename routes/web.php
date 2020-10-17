@@ -20,7 +20,8 @@ Auth::routes();
 
 Route::resources([
     'barangmasuk' => 'BarangMasukController',
-    'barangkeluar' => 'BarangKeluarController'
+    'barangkeluar' => 'BarangKeluarController',
+    'barangretur' => 'BarangReturController',
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
