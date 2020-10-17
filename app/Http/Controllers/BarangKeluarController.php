@@ -120,6 +120,8 @@ class BarangKeluarController extends Controller
                 ]
             );
 
+
+            $request->session()->flash('alert-success', 'barang keluar sukses!');
             return redirect()->route($this->redirectTo);
             # dd($barangkeluar); 
             

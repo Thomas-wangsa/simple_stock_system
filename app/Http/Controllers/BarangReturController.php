@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\BarangRetur;
 use Illuminate\Http\Request;
+use App\Stock;
 
 class BarangReturController extends Controller
-{
+{   
+    protected $redirectTo      = 'home';
     /**
      * Display a listing of the resource.
      *
@@ -22,9 +24,31 @@ class BarangReturController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+            $stock = $request->input('stock');
+
+            if(!$stock) {
+                throw new Exception('Please select the stock item;');
+            }
+
+
+            $stock_array = explode(",", $stock);
+
+           
+
+
+            $result = Stock::whereIn('id', $stock_array)
+            ->where('status', 2)
+            ->update(['status' => 3]);
+
+            $request->session()->flash('alert-success', 'barang retur sukses!');
+            return redirect()->route($this->redirectTo);
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
     }
 
     /**

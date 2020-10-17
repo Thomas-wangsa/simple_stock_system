@@ -5,20 +5,7 @@
     <h1 class="text-center"> Stock Barang </h1>
 
     <div class="table-responsive">
-      <!-- Button to Open the Modal -->
-
-
-      <div class="btn btn-warning btn-block" id="btn_submit_barang_keluar" onclick="submit_barang_keluar()" hidden="">
-      submit barang keluar
-      </div>
-
-      <div class="btn btn-danger btn-block" id="btn_submit_barang_retur" onclick="submit_barang_retur()" hidden="">
-      submit barang retur
-      </div>
-
-
-      <div class="clearfix" style="margin-bottom: 10px"> </div>
-      
+      <!-- Button to Open the Modal -->      
       @if(!app('request')->input('trigger') )
       <form action="{{route('home')}}">
         <input type="hidden" name="search" value="on">
@@ -137,7 +124,7 @@
         <br/>
 
         <div class="row" >
-          <button type="submit" class="btn btn-primary btn-block">Filter</button>
+          <button type="submit" class="btn btn-info btn-block">Filter</button>
         </div>
       </form>
       @endif
@@ -151,6 +138,19 @@
       </a>
 
       <div class="clearfix" style="margin-bottom: 10px"> </div>
+
+
+      <div class="btn btn-success btn-block" id="btn_submit_barang_keluar" onclick="submit_barang_keluar()" hidden="">
+      submit barang keluar
+      </div>
+
+      <div class="btn btn-danger btn-block" id="btn_submit_barang_retur" onclick="submit_barang_retur()" hidden="">
+      submit barang retur
+      </div>
+
+      <div class="btn btn-warning btn-block" id="btn_submit_barang_print" onclick="alert('on_progress')" hidden="">
+      print barang
+      </div>
 
       <table class="table table-bordered" style="margin-top: 10px">
           <thead>
@@ -167,6 +167,7 @@
               <th> Penjual </th>
               <th> Pembeli </th>
               <th> Barcode </th>
+              <th> Action </th>
             </tr>
           </thead>
           <tbody>
@@ -223,6 +224,14 @@
                 <td class="<?php if($val->status == 2) {echo "text-danger";} ?>"> 
                   {{$val->barcode}} 
                 </td>
+
+
+                <td>
+                    <div class="btn-group-vertical">
+                      <button type="button" class="btn btn-info" onclick="alert('on progress')">Info</button>
+                      <button type="button" class="btn btn-danger" onclick="alert('on progress')">Delete</button>
+                    </div>
+                </td>
                 </tr>
                 <?php $no++; ?>
               @endforeach
@@ -259,7 +268,7 @@
 
     var status =  "{{ app('request')->input('select_status') }}"
 
-    if (status == null || status == 1) {
+    if (!status || status == 1) {
       $("#btn_submit_barang_keluar").attr('hidden',false);
     } else if (status == 2) {
       $("#btn_submit_barang_retur").attr('hidden',false);
@@ -270,10 +279,12 @@
 
     
     $("#btn_reset_filter").attr('hidden',false);
+    $("#btn_submit_barang_print").attr('hidden',false);
 
     if(selected_item.length < 1) {
       $("#btn_submit_barang_keluar").attr('hidden',true);
-    }
+      $("#btn_submit_barang_print").attr('hidden',true);
+    } 
 
     console.log(selected_item);
   }
