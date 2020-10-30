@@ -83,9 +83,17 @@ class BarangMasukController extends Controller
                 $data->created_by = Auth::user()->id;
                 $data->updated_by = Auth::user()->id;
 
+
+                $data_category = Category::find($request->kategori)->name;
+                $data_merk = Merk::find($request->merk)->name;
+                $data_models = Models::find($request->model)->name;
+
+
                 $full_each_data = array();
                 for ($x = 1; $x <= $data->jumlah_barang; $x++) {
                     $now = now();
+
+                    $barcode = substr($data_category,0,2).substr($data_merk,0,2).substr($data_models,0,2)."_".$x."_".substr($this->faker->uuid,0,7);
 
                     $each_data = array();
                     $each_data["category_id"] = $request->kategori;
@@ -96,7 +104,7 @@ class BarangMasukController extends Controller
                     $each_data["tgl_pembelian"] = $request->tgl_pembelian;
                     $each_data["uuid_barang_masuk"] = $data->uuid;
                     $each_data["uuid"] = $this->faker->uuid;
-                    $each_data["barcode"] = $this->faker->uuid;
+                    $each_data["barcode"] = $barcode;
                     $each_data["created_at"] = now();
                     $each_data["updated_at"] = now();
                     $each_data["created_by"] = Auth::user()->id;

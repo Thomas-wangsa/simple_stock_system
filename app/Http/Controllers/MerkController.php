@@ -68,7 +68,12 @@ class MerkController extends Controller
     public function store(Request $request)
     {
         try {
-            $clean_name = strtolower(trim($request->name,' '));
+            $clean_name = strtoupper(trim($request->name,' '));
+
+            if(len($clean_name) < 3) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+                return redirect()->route($this->redirectTo);
+            }
 
             $exists = Merk::where('category_id',$request->category)
             ->where('name',$clean_name)->first();
@@ -135,7 +140,15 @@ class MerkController extends Controller
     public function update(Request $request, Merk $merk)
     {
         try {
-            $merk->name = $request->name;
+
+            $clean_name = strtoupper(trim($request->name,' '));
+
+            if(len($clean_name) < 3) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+                return redirect()->route($this->redirectTo);
+            }
+
+            $merk->name = $clean_name;
             $merk->updated_by = Auth::user()->id;
             $merk->save();
 

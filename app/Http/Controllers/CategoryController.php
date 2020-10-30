@@ -63,7 +63,13 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $clean_name = strtolower(trim($request->name,' '));
+            $clean_name = strtoupper(trim($request->name,' '));
+
+            if(len($clean_name) < 3) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+                return redirect()->route($this->redirectTo);
+            }
+
 
             $exists = Category::where('name',$clean_name)->first();
 
@@ -129,7 +135,15 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         try {
-            $category->name = $request->name;
+
+            $clean_name = strtoupper(trim($request->name,' '));
+
+            if(len($clean_name) < 3) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+                return redirect()->route($this->redirectTo);
+            }
+
+            $category->name = $clean_name;
             $category->updated_by = Auth::user()->id;
             $category->save();
 

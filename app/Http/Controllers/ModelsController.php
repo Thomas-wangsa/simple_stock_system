@@ -72,7 +72,12 @@ class ModelsController extends Controller
     public function store(Request $request)
     {
         try {
-            $clean_name = strtolower(trim($request->name,' '));
+            $clean_name = strtoupper(trim($request->name,' '));
+
+            if(len($clean_name) < 3) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+                return redirect()->route($this->redirectTo);
+            }
 
             $exists = Models::where('merk_id',$request->merk)
             ->where('name',$clean_name)->first();
@@ -159,8 +164,14 @@ class ModelsController extends Controller
                 return redirect()->route($this->redirectTo);
             }
 
-            
-            $models->name = $request->name;
+            $clean_name = strtoupper(trim($request->name,' '));
+
+            if(len($clean_name) < 3) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+                return redirect()->route($this->redirectTo);
+            }
+
+            $models->name = $clean_name;
             $models->updated_by = Auth::user()->id;
             $models->save();
 

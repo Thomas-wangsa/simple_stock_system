@@ -35,9 +35,36 @@ class HomeController extends Controller
             $trigger_from = $request->input('trigger_from');
             $uuid = $request->input('uuid');
             if($trigger_from == "barang_masuk") {
-                $stock = Stock::where("uuid_barang_masuk",$uuid)->get();
+
+                $stock = Stock::leftJoin('category','category.id','=','stock.category_id')
+                        ->leftJoin('merk','merk.id','=','stock.merk_id')
+                        ->leftJoin('models','models.id','=','stock.models_id')
+                        ->leftJoin('users as uc','uc.id','=','stock.created_by')
+                        ->leftJoin('users as up','up.id','=','stock.created_by')
+                        ->where("uuid_barang_masuk",$uuid)
+                        ->select(
+                            'stock.*',
+                            'uc.name AS created_by_name',
+                            'up.name AS updated_by_name',
+                            'category.name AS category_name',
+                            'merk.name AS merk_name',
+                            'models.name AS models_name')
+                        ->get();
             } else if ($trigger_from == "barang_keluar"){
-                $stock = Stock::where("uuid_barang_keluar",$uuid)->get();
+                $stock = Stock::leftJoin('category','category.id','=','stock.category_id')
+                        ->leftJoin('merk','merk.id','=','stock.merk_id')
+                        ->leftJoin('models','models.id','=','stock.models_id')
+                        ->leftJoin('users as uc','uc.id','=','stock.created_by')
+                        ->leftJoin('users as up','up.id','=','stock.created_by')
+                        ->where("uuid_barang_keluar",$uuid)
+                        ->select(
+                            'stock.*',
+                            'uc.name AS created_by_name',
+                            'up.name AS updated_by_name',
+                            'category.name AS category_name',
+                            'merk.name AS merk_name',
+                            'models.name AS models_name')
+                        ->get();
             }
 
         } else if($search == "on") {
@@ -124,7 +151,6 @@ class HomeController extends Controller
                 'merk.name AS merk_name',
                 'models.name AS models_name')
             ->get();
-
 
         } else {
             $stock = Stock::leftJoin('category','category.id','=','stock.category_id')

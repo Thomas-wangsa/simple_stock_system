@@ -31,21 +31,21 @@ class DatabaseSeeder extends Seeder
 
     public function populate_category() {
         $data = array(
-                "name"=>"ac",
+                "name"=>"AC",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
         Category::firstOrCreate($data);
 
         $data = array(
-                "name"=>"tv",
+                "name"=>"TV",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
         Category::firstOrCreate($data);
 
         $data = array(
-                "name"=>"car",
+                "name"=>"CAR",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
     public function populate_merk() {
         $data = array(
                 "category_id"=>1,
-                "name"=>"panasonic",
+                "name"=>"PANASONIC",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
 
         $data = array(
                 "category_id"=>1,
-                "name"=>"daikin",
+                "name"=>"DAIKIN",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
 
         $data = array(
                 "category_id"=>2,
-                "name"=>"sharp",
+                "name"=>"SHARP",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
 
         $data = array(
                 "category_id"=>2,
-                "name"=>"xiaomi",
+                "name"=>"XIAOMI",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
@@ -91,7 +91,7 @@ class DatabaseSeeder extends Seeder
     public function populate_models() {
         $data = array(
                 "merk_id"=>1,
-                "name"=>"panasonic_r310",
+                "name"=>"R310",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
@@ -99,7 +99,7 @@ class DatabaseSeeder extends Seeder
 
         $data = array(
                 "merk_id"=>1,
-                "name"=>"panasonic_r420",
+                "name"=>"R420",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
@@ -116,7 +116,7 @@ class DatabaseSeeder extends Seeder
 
         $data = array(
                 "merk_id"=>3,
-                "name"=>"smarttv_4jt",
+                "name"=>"SMARTTV4k",
                 "created_by"=>1,
                 "updated_by"=>1,
         );
