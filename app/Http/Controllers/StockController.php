@@ -3,8 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Stock;
-use Illuminate\Http\Request;
+use App\BarangKeluar;
 
+use Illuminate\Http\Request;
+use PDF;
+use Exception;
 class StockController extends Controller
 {   
     protected $redirectTo      = 'home';
@@ -13,6 +16,71 @@ class StockController extends Controller
 
     }
 
+
+    public function print_invoice(Request $request) {
+        try {
+            //dd($request);
+            // $stock = $request->input('stock');
+
+            // if(!$stock) {
+            //     throw new Exception('Please select the stock item;');
+            // }
+
+            $barang_keluar = BarangKeluar::where('uuid',$request->uuid)->first();
+            if($barang_keluar == null) {
+                throw new Exception('barang_keluar tidak ketemu;');
+            }
+
+            $stock = Stock::where('uuid_barang_keluar',$request->uuid )->get();
+            // $stock_array = explode(",", $stock);
+
+            $data = [
+                'barang_keluar' => $barang_keluar,
+                'stock' => $stock,
+            ];
+            //dd($data);
+
+            $pdf = PDF::loadview('print.invoice',['data' => $data])->setPaper('a4', 'landscape');
+            return $pdf->stream();
+
+            # return view('layouts.test', ['data' => $data]);
+            
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
+    }
+
+
+
+
+    public function print_stock(Request $request) {
+        try {
+            $stock = $request->input('stock');
+
+            if(!$stock) {
+                throw new Exception('Please select the stock item;');
+            }
+
+
+            $stock_array = explode(",", $stock);
+
+            $data = [
+                'stock' => Stock::whereIn('id', $stock_array)->select('barcode')->get(),
+            ];
+
+            $pdf = PDF::loadview('print.barcode',$data)->setPaper('a4', 'landscape');
+            return $pdf->stream();
+
+            # return view('layouts.test', ['data' => $data]);
+            
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
+
+
+    }
 
     public function delete_stock(Request $request) {
         try {

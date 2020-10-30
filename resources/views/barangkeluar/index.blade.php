@@ -31,7 +31,10 @@
               <?php $no = 1; ?> 
               @foreach($data['barangkeluar'] as $key=>$val)
               <tr> 
-                <td> {{$no}} </td>
+                <td> 
+                  {{ ($data['barangkeluar']->currentpage()-1) 
+                  * $data['barangkeluar']->perpage() + $key + 1 }}
+                </td>
                 <td> {{$val->tgl_penjualan}} </td>
                 <td> {{$val->jumlah_barang}} </td>
 
@@ -40,7 +43,14 @@
                 <td> {{$val->durasi_garansi}} </td>
                 <td> {{$val->total_harga}} </td>
                 <td> {{$val->created_at}} </td>
-                <td> <button class="btn btn-primary" onclick="check_data('{{$val->uuid}}')">check data</button></td>
+                <td> 
+                  <button class="btn btn-info" onclick="print_invoice('{{$val->uuid}}')">
+                    print data
+                  </button>
+                  <button class="btn btn-primary" onclick="check_data('{{$val->uuid}}')">
+                    check data
+                  </button>
+                </td>
               </tr>
               <?php $no++; ?>
               @endforeach
@@ -49,10 +59,19 @@
         </table>
   </div>
 
+  <div class="float-right" style="margin-top: 20px!important"> 
+      {{ $data['barangkeluar']->links() }}
+  </div>
+  <div class="clearfix"> </div>
+
 </div>
 @endsection
 
 <script type="text/javascript">
+
+  function print_invoice(uuid) {
+    window.location = "{{ route('stock.print_invoice')}}?uuid="+uuid;
+  }
 
   function check_data(uuid) {
    window.open("{{ route('home')}}?trigger=on&trigger_from=barang_keluar&uuid="+uuid)

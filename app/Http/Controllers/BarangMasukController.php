@@ -31,8 +31,23 @@ class BarangMasukController extends Controller
      */
     public function index() {
 
+        $barangmasuk = BarangMasuk::leftJoin('category','category.id','=','barangmasuk.category_id')
+                        ->leftJoin('merk','merk.id','=','barangmasuk.merk_id')
+                        ->leftJoin('models','models.id','=','barangmasuk.models_id')
+                        ->leftJoin('users as uc','uc.id','=','barangmasuk.created_by')
+                        ->leftJoin('users as up','up.id','=','barangmasuk.created_by')
+                        ->orderBy('created_at', 'desc')
+                        ->select(
+                            'barangmasuk.*',
+                            'uc.name AS created_by_name',
+                            'up.name AS updated_by_name',
+                            'category.name AS category_name',
+                            'merk.name AS merk_name',
+                            'models.name AS models_name')
+                        ->paginate(20);
+
         $data = [
-            "barangmasuk" => BarangMasuk::all(),
+            "barangmasuk" => $barangmasuk,
             "category" =>  Category::all(),
 
         ];

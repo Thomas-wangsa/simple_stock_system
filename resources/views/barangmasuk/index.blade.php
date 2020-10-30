@@ -6,7 +6,7 @@
   <h1 class="text-center"> Barang Masuk </h1>
   <div class="table-responsive">
       <!-- Button to Open the Modal -->
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addBarangMasuk">
+      <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addBarangMasuk">
       tambah barang masuk
       </button>
 
@@ -20,7 +20,7 @@
               <th>Merk</th>
               <th>Model</th>
               <th>Penjual</th>
-              <th>Created At</th>
+              <th> Di Buat oleh </th>
               <th> Info </th>
             </tr>
           </thead>
@@ -33,33 +33,28 @@
               <?php $no = 1; ?> 
               @foreach($data['barangmasuk'] as $key=>$val)
               <tr> 
-                <td> {{$no}} </td>
+                <td>
+                  {{ ($data['barangmasuk']->currentpage()-1) 
+                  * $data['barangmasuk']->perpage() + $key + 1 }}
+               </td>
                 <td> {{$val->tgl_pembelian}} </td>
                 <td> {{$val->jumlah_barang}} </td>
                 <td> 
-                  @if($val->kategori == 1) 
-                    AC
-                  @else
-                    -
-                  @endif 
+                  {{$val->category_name}}
                 </td>
                 <td>
-                  @if($val->merk == 1) 
-                    Sharp
-                  @else
-                    Daikin
-                  @endif 
+                  {{$val->merk_name}}
                 </td>
                 <td>
-                  @if($val->model == 1) 
-                    R32
-                  @else
-                    R410
-                  @endif 
+                  {{$val->models_name}}
                 </td>
                 <td> {{$val->penjual}} </td>
-                <td> {{$val->created_at}} </td>
-                <td> <button class="btn btn-primary" onclick="check_data('{{$val->uuid}}')">check data</button></td>
+                <td> 
+                  {{$val->created_by_name}}
+                  <br/>
+                  {{$val->created_at}} 
+                </td>
+                <td> <button class="btn btn-info" onclick="check_data('{{$val->uuid}}')">check data</button></td>
               </tr>
               <?php $no++; ?>
               @endforeach
@@ -67,6 +62,12 @@
           </tbody>
         </table>
   </div>
+
+
+  <div class="float-right" style="margin-top: 20px!important"> 
+      {{ $data['barangmasuk']->links() }}
+  </div>
+  <div class="clearfix"> </div>
 
 
 
@@ -154,7 +155,7 @@
 
             </div>
 
-            <button type="submit" class="btn btn-block btn-primary">
+            <button type="submit" class="btn btn-block btn-dark">
               TAMBAH BARANG MASUK
             </button>
           </form>

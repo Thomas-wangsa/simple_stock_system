@@ -19,6 +19,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get("/stock/delete_stock","StockController@delete_stock")->name('stock.delete_stock');
+Route::get("/stock/print_stock","StockController@print_stock")->name('stock.print_stock');
+Route::get("/stock/print_invoice","StockController@print_invoice")->name('stock.print_invoice');
+
+
 Route::resources([
     'barangmasuk' => 'BarangMasukController',
     'barangkeluar' => 'BarangKeluarController',

@@ -28,7 +28,7 @@ class BarangKeluarController extends Controller
     public function index()
     {
         $data = [
-            "barangkeluar" => BarangKeluar::all(),
+            "barangkeluar" => BarangKeluar::orderBy('created_at', 'desc')->paginate(20),
         ];
         # return view('layouts.test', ['data' => $data]);
 
@@ -53,8 +53,24 @@ class BarangKeluarController extends Controller
 
             $stock_array = explode(",", $stock);
 
+            $stock = Stock::leftJoin('category','category.id','=','stock.category_id')
+                        ->leftJoin('merk','merk.id','=','stock.merk_id')
+                        ->leftJoin('models','models.id','=','stock.models_id')
+                        ->leftJoin('users as uc','uc.id','=','stock.created_by')
+                        ->leftJoin('users as up','up.id','=','stock.created_by')
+                        ->whereIn('stock.id', $stock_array)
+                        ->where('stock.status',1)
+                        ->select(
+                            'stock.*',
+                            'uc.name AS created_by_name',
+                            'up.name AS updated_by_name',
+                            'category.name AS category_name',
+                            'merk.name AS merk_name',
+                            'models.name AS models_name')
+                        ->get();
+
             $data = [
-                "stock" => Stock::whereIn('id', $stock_array)->where('status',1)->get(),
+                "stock" => $stock,
                 "total_harga" => Stock::whereIn('id', $stock_array)->where('status',1)->sum('harga_jual'),
             ];
             # return view('layouts.test', ['data' => $data]);

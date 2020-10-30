@@ -85,25 +85,13 @@
               <tr> 
                 <td> {{$no}}</td>
                 <td> 
-                @if($val->kategori == 1) 
-                  AC
-                @else
-                  -
-                @endif 
+                  {{$val->category_name}}
                 </td>
                 <td>
-                  @if($val->merk == 1) 
-                    Sharp
-                  @else
-                    Daikin
-                  @endif 
+                  {{$val->merk_name}}
                 </td>
                 <td>
-                  @if($val->model == 1) 
-                    R32
-                  @else
-                    R410
-                  @endif 
+                  {{$val->models_name}}
                 </td>
                 <td>
                 @if($val->status == 1) 

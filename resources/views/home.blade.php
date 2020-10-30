@@ -150,7 +150,7 @@
       submit barang retur
       </div>
 
-      <div class="btn btn-warning btn-block" id="btn_submit_barang_print" onclick="alert('on_progress')" hidden="">
+      <div class="btn btn-warning btn-block" id="btn_submit_barang_print" onclick="submit_print()" hidden="">
       print barang
       </div>
 
@@ -258,6 +258,8 @@
           'date_from_pembeli' => Request::get('date_from_pembeli'),
           'date_to_pembeli' => Request::get('date_to_pembeli'),
           'select_status' => Request::get('select_status'),
+
+          'select_limit' => Request::get('select_limit'),
 
           ])
 
@@ -399,6 +401,14 @@
     console.log(selected_item);
   }
 
+
+  function submit_print() {
+    if(selected_item.length > 0) {
+      window.location = "{{ route('stock.print_stock')}}?stock="+selected_item;
+    } else {
+      alert("pilih barang terlebih dahulu;");
+    }
+  }
 
   function submit_barang_keluar() {
 
