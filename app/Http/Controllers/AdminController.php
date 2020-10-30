@@ -4,13 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Faker\Factory as Faker;
 
 class AdminController extends Controller
 {   
 
-     public function __construct()
-    {
+     protected $faker;
+    protected $redirectTo      = 'admin.index';
+
+    public function __construct()
+    {      
+
         $this->middleware('auth');
+        $this->faker    = Faker::create();
     }
     /**
      * Display a listing of the resource.
@@ -20,7 +26,7 @@ class AdminController extends Controller
     public function index()
     {
         $data = [
-            "user" => User::all(),
+            "users" => User::paginate(20),
         ];
         # return view('layouts.test', ['data' => $data]);
 
@@ -65,9 +71,11 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
-    {
-        //
+    public function edit($id) {
+        $data = User::find($id);
+
+
+        return view('admin.edit', ['data'=>$data]);
     }
 
     /**
@@ -78,8 +86,29 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        //
+    {   
+        try {
+            $data = User::find($id);
+            $data->name = $request->name;
+            $data->email = $request->email;
+
+            if($request->role) {
+                $data->role = $request->role;
+            }
+
+            if($request->password) {
+                $data->password = bcrypt($request->password);
+            }
+
+            $data->save();
+            $request->session()->flash('alert-success', $data->name.' has been updated');
+            return redirect()->route($this->redirectTo);
+        }
+        catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
+        
     }
 
     /**

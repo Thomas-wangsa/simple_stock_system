@@ -5,6 +5,7 @@ use App\User;
 use App\Category;
 use App\Merk;
 use App\Models;
+use App\Rule;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,19 +16,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {	
+        if(env('ENV_STATUS', 'development') == 'development') {
+        	$data = array(
+                    "name"=>"admin",
+                    "email"=>"admin@gmail.com",
+                    "password"=>bcrypt(12345678),
+                    "role"=>2
+                );
+        	User::firstOrCreate($data);
 
-    	$data = array(
-                "name"=>"thomas",
-                "email"=>"thomas.wangsa@gmail.com",
-                "password"=>bcrypt(12345678),
-            );
-    	User::firstOrCreate($data);
-
-        $this->populate_category();
-        $this->populate_merk();
-        $this->populate_models();
+            $this->populate_category();
+            $this->populate_merk();
+            $this->populate_models();
+        }
         // $this->call(UsersTableSeeder::class);
     }
+
+
+
+
 
     public function populate_category() {
         $data = array(

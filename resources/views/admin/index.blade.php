@@ -1,6 +1,11 @@
 @extends('layouts.main')
 
 @section('content')
+
+<style type="text/css">
+  table tr th, table tr td {text-align: center}
+
+</style>
 <div class="container">
 	<h1 class="text-center"> Admin Page</h1>
 
@@ -21,24 +26,52 @@
       List Model
       </a>
 
-      <table class="table table-bordered" style="margin-top: 10px">
-          <thead>
-            <tr>
-              <th> No </th>
-              <th>Tgl Masuk</th>
-              <th>Jumlah barang</th>
-              <th>Kategori</th>
-              <th>Merk</th>
-              <th>Model</th>
-              <th>Penjual</th>
-              <th>Created At</th>
-              <th> Info </th>
-            </tr>
-          </thead>
-          <tbody>
-            
-          </tbody>
+      <div style="margin-top: 20px">
+        <table class="table table-striped table-bordered">
+            <thead>
+              <tr class="info"> 
+                <th> No </th>
+                <th> User Name </th>
+                <th> Email </th>
+                <th> Role </th>
+                <th> Action </th>
+              </tr>
+            </thead>
+            <tbody>
+              @foreach($data['users'] as $key=>$val)
+              <tr>
+                <td> 
+                  {{ ($data['users']->currentpage()-1) 
+                  * $data['users']->perpage() + $key + 1 }} 
+                </td>
+                <td>
+                  {{$val->name}}
+                </td>
+                <td>
+                  {{$val->email}}
+                </td>
+                <td>
+                  @if($val->role == 2) 
+                    super admin
+                  @else
+                    staff
+                  @endif
+                </td>
+                <td>
+                  <a class="btn btn-warning" href="{{route('admin.edit',$val->id)}}">
+                    Edit {{$val->name}}
+                  </a>
+                </td>
+
+              </tr>
+              @endforeach
+            </tbody>
         </table>
+        <div class="float-right" style="margin-top: -15px!important"> 
+          {{ $data['users']->links() }}
+        </div>
+        <div class="clearfix"> </div>
+      </div>
   	</div>
 
 </div>
