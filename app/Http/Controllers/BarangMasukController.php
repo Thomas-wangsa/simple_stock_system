@@ -85,16 +85,14 @@ class BarangMasukController extends Controller
                 $data->updated_by = Auth::user()->id;
 
 
-                $data_category = Category::find($request->kategori)->name;
-                $data_merk = Merk::find($request->merk)->name;
-                $data_models = Models::find($request->model)->name;
+                
 
 
                 $full_each_data = array();
                 for ($x = 1; $x <= $data->jumlah_barang; $x++) {
                     $now = now();
 
-                    $barcode = substr($data_category,0,2).substr($data_merk,0,3).substr($data_models,0,2)."-".substr($this->faker->uuid,0,7);
+                    $barcode = $request->prefix."-".substr($this->faker->uuid,0,7);
 
                     $each_data = array();
                     $each_data["category_id"] = $request->kategori;

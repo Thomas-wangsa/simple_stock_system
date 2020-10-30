@@ -146,6 +146,14 @@
 
             </div>
 
+            <div class="form-group">
+              <label for="staff_nama"> 
+                Prefix Barcode :
+              </label>
+              <input type="text" class="form-control" name="prefix" required="">
+
+            </div>
+
             <button type="submit" class="btn btn-block btn-primary">
               TAMBAH BARANG MASUK
             </button>

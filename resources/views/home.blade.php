@@ -166,9 +166,9 @@
               <th> Merk</th>
               <th> Model</th>
               <th> Status </th>
+              <th> Barcode </th>
               <th> Penjual </th>
               <th> Pembeli </th>
-              <th> Barcode </th>
               <th> Action </th>
             </tr>
           </thead>
@@ -216,17 +216,18 @@
                     -
                   @endif 
                 </td>
-                <td> {{$val->penjual}} </td>
-                <td> {{$val->pembeli}} </td>
                 <td class="<?php if($val->status == 2) {echo "text-danger";} ?>"> 
                   {{$val->barcode}} 
                 </td>
+                <td> {{$val->penjual}} </td>
+                <td> {{$val->pembeli}} </td>
+                
 
 
                 <td>
                     @if($val->status != 4)
                     <div class="btn-group-vertical">
-                      <button type="button" class="btn btn-info" onclick="alert('on progress')">Info</button>
+      
                       <button type="button" class="btn btn-danger" onclick='delete_data("{{$val->id}}","{{$val->barcode}}")'>Delete</button>
                     </div>
                     @endif
