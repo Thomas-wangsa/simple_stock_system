@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Auth;
 
 use App\BarangMasuk;
 use App\Stock;
+use App\Category;
+use App\Models;
+use App\Merk;
 
 use Illuminate\Http\Request;
 use Faker\Factory as Faker;
@@ -28,6 +31,8 @@ class BarangMasukController extends Controller
 
         $data = [
             "barangmasuk" => BarangMasuk::all(),
+            "category" =>  Category::all(),
+
         ];
         # return view('layouts.test', ['data' => $data]);
 

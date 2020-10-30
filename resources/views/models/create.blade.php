@@ -6,12 +6,12 @@
 
     <div class="table-responsive">
       <!-- Button to Open the Modal -->
-      <a class="btn btn-info" href="{{ route('model.index') }}">
+      <a class="btn btn-info" href="{{ route('models.index') }}">
         back
       </a>
 
       <div style="margin-top: 10px"> 
-        <form method="POST" action="{{ route('model.store') }}">
+        <form method="POST" action="{{ route('models.store') }}">
             {{ csrf_field() }}
 
             <div class="form-group">

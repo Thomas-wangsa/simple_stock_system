@@ -17,7 +17,7 @@
       List Merk
       </a>
 
-      <a class="btn btn-danger" href="{{ route('model.index') }}">
+      <a class="btn btn-danger" href="{{ route('models.index') }}">
       List Model
       </a>
 

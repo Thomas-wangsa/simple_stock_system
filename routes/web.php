@@ -26,7 +26,7 @@ Route::resources([
     'admin' => 'AdminController',
     'category' => 'CategoryController',
     'merk' => 'MerkController',
-    'model'=> 'ModelsController'
+    'models'=> 'ModelsController'
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');

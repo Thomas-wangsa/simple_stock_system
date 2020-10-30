@@ -12,7 +12,7 @@
       kembali ke menu admin
       </a>
 
-      <a class="btn btn-danger" href="{{ route('model.create') }}">
+      <a class="btn btn-danger" href="{{ route('models.create') }}">
       tambah model
       </a>
 
@@ -53,7 +53,7 @@
                   {{$val->updated_at}} 
                 </td>
                 <td> 
-                  <a class="btn btn-warning" href="{{route('model.edit',$val->id)}}" > 
+                  <a class="btn btn-warning" href="{{route('models.edit',$val->id)}}?id={{$val->id}}" > 
                     edit data
                   </a>
                 </td>

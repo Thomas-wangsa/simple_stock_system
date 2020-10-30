@@ -13,7 +13,7 @@ use Exception;
 class ModelsController extends Controller
 {   
     protected $faker;
-    protected $redirectTo      = 'model.index';
+    protected $redirectTo      = 'models.index';
 
     public function __construct(){
         $this->faker    = Faker::create();
@@ -41,7 +41,7 @@ class ModelsController extends Controller
         ];
         # return view('layouts.test', ['data' => $data]);
 
-        return view('model.index', ['data' => $data]);
+        return view('models.index', ['data' => $data]);
     }
 
     /**
@@ -56,7 +56,7 @@ class ModelsController extends Controller
                 'category' => Category::all()
             ];
             # return view('layouts.test', ['data' => $data]);
-            return view('model.create', ['data' => $data]);
+            return view('models.create', ['data' => $data]);
         } catch(Exception $e) {
             $request->session()->flash('alert-danger', $e->getMessage());
             return redirect()->route($this->redirectTo);
@@ -114,9 +114,32 @@ class ModelsController extends Controller
      * @param  \App\Models  $models
      * @return \Illuminate\Http\Response
      */
-    public function edit(Models $models)
+    public function edit(Request $request)
     {
-        //
+        try {
+
+            $models = Models::find($request->id);
+
+            if($models == null) {
+                $request->session()->flash('alert-warning', "data is not exists");
+                return redirect()->route($this->redirectTo);
+            }
+
+            $merk = Merk::find($models->merk_id);
+            $category = Category::find($merk->category_id);
+
+            $data = [
+                'model' => $models,
+                'category' => $category,
+                'merk' => $merk
+                // 'category' => Category::all()
+            ];
+            # return view('layouts.test', ['data' => $data]);
+            return view('models.edit', ['data' => $data]);
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
     }
 
     /**
@@ -128,7 +151,26 @@ class ModelsController extends Controller
      */
     public function update(Request $request, Models $models)
     {
-        //
+        try {
+            $models = Models::find($request->model_id);
+
+            if($models == null) {
+                $request->session()->flash('alert-warning', "data is not exists");
+                return redirect()->route($this->redirectTo);
+            }
+
+            
+            $models->name = $request->name;
+            $models->updated_by = Auth::user()->id;
+            $models->save();
+
+            $request->session()->flash('alert-success', $request->name.' has been updated');
+            return redirect()->route($this->redirectTo);
+            # return view('layouts.test', ['data' => $data]);
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
     }
 
     /**
