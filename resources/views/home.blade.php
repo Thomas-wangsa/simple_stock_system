@@ -22,26 +22,28 @@
 
         <div class="row">
           <div class="col">
-            <select class="form-control" name="select_category">
+            <select  id="category_select" class="form-control" name="select_category">
               <option value="">  Select Kategori </option>
-              <option value="1" <?php if(app('request')->input('select_category') == 1) echo "selected" ?> > AC </option>
+              @foreach($data['category'] as $key=>$val)
+              <option value="{{$val->id}}" 
+              <?php if(app('request')->input('select_category') == $val->id) {echo "selected";} ?>
+              > 
+              {{$val->name}} 
+            </option>
+              @endforeach
             </select>
           </div>
 
           <div class="col">
-            <select class="form-control" name="select_merk">
+            <select id="merk_select" class="form-control" name="select_merk">
               <option value="">  Select Merk </option>
-              <option value="1" <?php if(app('request')->input('select_merk') == 1) echo "selected" ?> > Sharp </option>
-              <option value="2" <?php if(app('request')->input('select_merk') == 2) echo "selected" ?> > Daikin </option>
-            </select>
+            </select>  
           </div>
 
 
           <div class="col">
-            <select class="form-control" name="select_model">
+            <select id="models_select" class="form-control" name="select_model">
               <option value="">  Select Model </option>
-              <option value="1" <?php if(app('request')->input('select_model') == 1) echo "selected" ?> > R32 </option>
-              <option value="2" <?php if(app('request')->input('select_model') == 2) echo "selected" ?>> R410 </option>
             </select>
           </div>
         </div>
@@ -186,25 +188,13 @@
 
                 <td> {{$no}} </td>
                 <td> 
-                  @if($val->kategori == 1) 
-                    AC
-                  @else
-                    -
-                  @endif 
+                  {{$val->category_name}}
                 </td>
                 <td>
-                  @if($val->merk == 1) 
-                    Sharp
-                  @else
-                    Daikin
-                  @endif 
+                  {{$val->merk_name}}
                 </td>
                 <td>
-                  @if($val->model == 1) 
-                    R32
-                  @else
-                    R410
-                  @endif 
+                  {{$val->models_name}}
                 </td>
                 <td>
                   @if($val->status == 1) 
@@ -244,6 +234,86 @@
 
 
 </div>
+
+
+<script type="text/javascript">
+  
+  $(document).ready(function() { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('#category_select').on('change', function() {
+      $('#merk_select').find('option').remove();
+      $('#models_select').find('option').remove();
+      if(this.value == undefined || this.value == "") {
+        return;
+      }
+
+      data_raw =  {category_id:this.value };
+      $.ajax({
+        type : "POST",
+        url: " {{ route('ajax.get_merk') }}",
+        contentType: "application/json",
+        data : JSON.stringify(data_raw),
+        success: function(result) {
+          console.log(result);
+          response = JSON.parse(result);
+          console.log(response);
+          if(response.error == true) {
+            //alert(response.messages);
+          } else {
+            append_tag = "<option value=''> select merk </option>";
+            $.each(response.data, function( index, value ) {
+              append_tag += "<option value='"+value.id+"'> "+value.name+" </option>";
+            });
+            $("#merk_select").append(append_tag);
+          }
+        },  
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+      }); 
+    });
+
+
+    $('#merk_select').on('change', function() {
+      $('#models_select').find('option').remove()
+      if(this.value == undefined || this.value == "") {
+        return;
+      }
+
+      data_raw =  {merk_id:this.value };
+      $.ajax({
+        type : "POST",
+        url: " {{ route('ajax.get_models') }}",
+        contentType: "application/json",
+        data : JSON.stringify(data_raw),
+        success: function(result) {
+          console.log(result);
+          response = JSON.parse(result);
+          console.log(response);
+          if(response.error == true) {
+            //alert(response.messages);
+          } else {
+            append_tag = "<option value=''> select models </option>";
+            $.each(response.data, function( index, value ) {
+              append_tag += "<option value='"+value.id+"'> "+value.name+" </option>";
+            });
+            $("#models_select").append(append_tag);
+          }
+        },  
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+      }); 
+    });
+
+
+  });
+</script>
 
 <script type="text/javascript">
 

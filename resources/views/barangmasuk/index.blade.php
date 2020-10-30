@@ -112,8 +112,11 @@
               <label for="staff_nama"> 
                 Kategori : 
               </label>
-              <select class="form-control" name="kategori" required="">
-                <option value="1"> AC </option>
+              <select class="form-control" id="category_select" name="kategori" required="">
+                <option value=""> pilih kategori </option>
+                @foreach($data['category'] as $key=>$val)
+                <option value="{{$val->id}}"> {{$val->name}} </option>
+                @endforeach
               </select>
             </div>
 
@@ -121,9 +124,8 @@
               <label for="staff_nama"> 
                 Merk : 
               </label>
-              <select class="form-control" name="merk" required="">
-                <option value="1"> Sharp </option>
-                <option value="2"> Daikin </option>
+              <select class="form-control" id="merk_select" name="merk" required="">
+                
               </select>
             </div>
 
@@ -131,9 +133,8 @@
               <label for="staff_nama"> 
                 Model : 
               </label>
-              <select class="form-control" name="model" required="">
-                <option value="1"> R32 </option>
-                <option value="2"> R410 </option>
+              <select class="form-control" id="models_select" name="model" required="">
+                
               </select>
             </div>
 
@@ -162,6 +163,86 @@
 
 
 </div>
+
+<script type="text/javascript">
+  
+  $(document).ready(function() { 
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $('#category_select').on('change', function() {
+      $('#merk_select').find('option').remove();
+      $('#models_select').find('option').remove();
+      if(this.value == undefined || this.value == "") {
+        return;
+      }
+
+      data_raw =  {category_id:this.value };
+      $.ajax({
+        type : "POST",
+        url: " {{ route('ajax.get_merk') }}",
+        contentType: "application/json",
+        data : JSON.stringify(data_raw),
+        success: function(result) {
+          console.log(result);
+          response = JSON.parse(result);
+          console.log(response);
+          if(response.error == true) {
+            alert(response.messages);
+          } else {
+            append_tag = "<option value=''> select merk </option>";
+            $.each(response.data, function( index, value ) {
+              append_tag += "<option value='"+value.id+"'> "+value.name+" </option>";
+            });
+            $("#merk_select").append(append_tag);
+          }
+        },  
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+      }); 
+    });
+
+
+    $('#merk_select').on('change', function() {
+      $('#models_select').find('option').remove()
+      if(this.value == undefined || this.value == "") {
+        return;
+      }
+
+      data_raw =  {merk_id:this.value };
+      $.ajax({
+        type : "POST",
+        url: " {{ route('ajax.get_models') }}",
+        contentType: "application/json",
+        data : JSON.stringify(data_raw),
+        success: function(result) {
+          console.log(result);
+          response = JSON.parse(result);
+          console.log(response);
+          if(response.error == true) {
+            alert(response.messages);
+          } else {
+            append_tag = "<option value=''> select models </option>";
+            $.each(response.data, function( index, value ) {
+              append_tag += "<option value='"+value.id+"'> "+value.name+" </option>";
+            });
+            $("#models_select").append(append_tag);
+          }
+        },  
+        error: function( jqXhr, textStatus, errorThrown ){
+            console.log( errorThrown );
+        }
+      }); 
+    });
+
+
+  });
+</script>
+
 @endsection
 
 <script type="text/javascript">
@@ -169,5 +250,7 @@
   function check_data(uuid) {
    window.open("{{ route('home')}}?trigger=on&trigger_from=barang_masuk&uuid="+uuid)
   }
-
 </script>
+
+
+

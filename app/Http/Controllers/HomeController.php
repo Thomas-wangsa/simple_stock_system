@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Stock;
-
+use App\Category;
+use App\Models;
+use App\Merk;
 class HomeController extends Controller
 {
     /**
@@ -41,26 +43,36 @@ class HomeController extends Controller
         } else if($search == "on") {
             $abstract_stock = new Stock;
 
+
+            $abstract_stock = $abstract_stock->leftJoin('category','category.id','=','stock.category_id')
+            ->leftJoin('merk','merk.id','=','stock.merk_id')
+            ->leftJoin('models','models.id','=','stock.models_id')
+            ->leftJoin('users as uc','uc.id','=','stock.created_by')
+            ->leftJoin('users as up','up.id','=','stock.created_by');
+
+
+            $clean_select_barcode = trim($request->input('select_barcode'),' ');
+
             if ($request->input('select_barcode')) {
-                $abstract_stock = $abstract_stock->where("barcode",'like',$request->input('select_barcode'));
+                $abstract_stock = $abstract_stock->where("barcode",'like',$clean_select_barcode);
             }
 
             if ($request->input('select_category')) {
-                $abstract_stock = $abstract_stock->where("kategori",$request->input('select_category'));
+                $abstract_stock = $abstract_stock->where("stock.category_id",$request->input('select_category'));
             }
 
 
            if ($request->input('select_merk')) {
-                $abstract_stock = $abstract_stock->where("merk",$request->input('select_merk'));
+                $abstract_stock = $abstract_stock->where("stock.merk_id",$request->input('select_merk'));
             }
 
             if ($request->input('select_model')) {
-                $abstract_stock = $abstract_stock->where("model",$request->input('select_model'));
+                $abstract_stock = $abstract_stock->where("stock.models_id",$request->input('select_model'));
             }
 
 
             if ($request->input('select_penjual')) {
-                $abstract_stock = $abstract_stock->where("penjual",'like',$request->input('select_penjual'));
+                $abstract_stock = $abstract_stock->where("penjual",'like',trim($request->input('select_penjual')));
             }
 
 
@@ -74,7 +86,7 @@ class HomeController extends Controller
 
 
             if ($request->input('select_pembeli')) {
-                $abstract_stock = $abstract_stock->where("pembeli",'like',$request->input('select_pembeli'));
+                $abstract_stock = $abstract_stock->where("pembeli",'like',trim($request->input('select_pembeli')));
             }
 
 
@@ -103,17 +115,43 @@ class HomeController extends Controller
                 $abstract_stock = $abstract_stock->orderBy('id',$request->input('select_order'));
             }
 
-            $stock = $abstract_stock->get();
+            $stock = $abstract_stock
+            ->select(
+                'stock.*',
+                'uc.name AS created_by_name',
+                'up.name AS updated_by_name',
+                'category.name AS category_name',
+                'merk.name AS merk_name',
+                'models.name AS models_name')
+            ->get();
 
 
         } else {
-            $stock = Stock::where("status",1)->get();
+            $stock = Stock::leftJoin('category','category.id','=','stock.category_id')
+            ->leftJoin('merk','merk.id','=','stock.merk_id')
+            ->leftJoin('models','models.id','=','stock.models_id')
+            ->leftJoin('users as uc','uc.id','=','stock.created_by')
+            ->leftJoin('users as up','up.id','=','stock.created_by')
+            ->where("status",1)
+            ->select(
+                'stock.*',
+                'uc.name AS created_by_name',
+                'up.name AS updated_by_name',
+                'category.name AS category_name',
+                'merk.name AS merk_name',
+                'models.name AS models_name')
+            ->get();
         }
 
         
 
 
-        $data = ["stock" => $stock];
+        $data = [
+            "stock" => $stock,
+            'category' => Category::all(),
+            "merk" => Merk::all(),
+            "models" => Models::all()
+        ];
         return view('home', ['data' => $data]);
     }
 }

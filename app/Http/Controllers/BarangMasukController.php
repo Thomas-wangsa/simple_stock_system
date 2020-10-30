@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 use App\BarangMasuk;
 use App\Stock;
@@ -68,47 +69,53 @@ class BarangMasukController extends Controller
                 throw new Exception('Quantity lebih dari limit, please contact the administrator;');
             }
 
-            $data = new BarangMasuk;
+            $uuid = $this->faker->uuid;
+            DB::transaction(function () use ($request, $uuid) {
+                $data = new BarangMasuk;
 
-            $data->tgl_pembelian = $request->tgl_pembelian;
-            $data->jumlah_barang = $request->jumlah_barang;
-            $data->kategori = $request->kategori;
-            $data->merk = $request->merk;
-            $data->model = $request->model;
-            $data->penjual = $request->penjual;
-            $data->uuid = $this->faker->uuid;
-            $data->created_by = Auth::user()->id;
-            $data->updated_by = Auth::user()->id;
+                $data->tgl_pembelian = $request->tgl_pembelian;
+                $data->jumlah_barang = $request->jumlah_barang;
+                $data->category_id = $request->kategori;
+                $data->merk_id = $request->merk;
+                $data->models_id = $request->model;
+                $data->penjual = $request->penjual;
+                $data->uuid = $uuid;
+                $data->created_by = Auth::user()->id;
+                $data->updated_by = Auth::user()->id;
 
-            $full_each_data = array();
-            for ($x = 1; $x <= $data->jumlah_barang; $x++) {
-                $now = now();
+                $full_each_data = array();
+                for ($x = 1; $x <= $data->jumlah_barang; $x++) {
+                    $now = now();
 
-                $each_data = array();
-                $each_data["kategori"] = $request->kategori;
-                $each_data["merk"] = $request->merk;
-                $each_data["model"] = $request->model;
-                $each_data["status"] = 1;
-                $each_data["penjual"] = $request->penjual;
-                $each_data["tgl_pembelian"] = $request->tgl_pembelian;
-                $each_data["uuid_barang_masuk"] = $data->uuid;
-                $each_data["uuid"] = $this->faker->uuid;
-                $each_data["barcode"] = $this->faker->uuid;
-                $each_data["created_at"] = now();
-                $each_data["updated_at"] = now();
-                $each_data["created_by"] = Auth::user()->id;
-                $each_data["updated_by"] = Auth::user()->id;
+                    $each_data = array();
+                    $each_data["category_id"] = $request->kategori;
+                    $each_data["merk_id"] = $request->merk;
+                    $each_data["models_id"] = $request->model;
+                    $each_data["status"] = 1;
+                    $each_data["penjual"] = $request->penjual;
+                    $each_data["tgl_pembelian"] = $request->tgl_pembelian;
+                    $each_data["uuid_barang_masuk"] = $data->uuid;
+                    $each_data["uuid"] = $this->faker->uuid;
+                    $each_data["barcode"] = $this->faker->uuid;
+                    $each_data["created_at"] = now();
+                    $each_data["updated_at"] = now();
+                    $each_data["created_by"] = Auth::user()->id;
+                    $each_data["updated_by"] = Auth::user()->id;
 
-                array_push($full_each_data, $each_data);
-                # $full_each_data.append($each_data);
+                    array_push($full_each_data, $each_data);
+                    # $full_each_data.append($each_data);
 
-            } 
+                } 
 
 
-            $data->save();
-            Stock::insert($full_each_data);
-            $request->session()->flash('alert-success', "data ".$data->tgl_pembelian.' has been created');
-            return redirect()->route($this->redirectTo,"search=on&uuid=".$data->uuid);
+                $data->save();
+                Stock::insert($full_each_data);
+
+                
+            });
+            $request->session()->flash('alert-success', "data ".$request->tgl_pembelian.' has been created');
+            return redirect()->route($this->redirectTo,"search=on&uuid=".$uuid);
+
         }
         catch(Exception $e) {
             $request->session()->flash('alert-danger', $e->getMessage());

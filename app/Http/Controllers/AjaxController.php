@@ -5,10 +5,37 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Stock;
 use App\Merk;
+use App\Models;
+
 use DB;
 use Exception;
 class AjaxController extends Controller
 { 
+
+
+  public function get_models(Request $request) {
+      try {
+        $response = [
+          "error" => true,
+          "messages"=> null,
+          "data" => null
+        ];
+        $data = Models::where('merk_id',$request->merk_id)->get();
+
+        if(count($data) == 0) {
+          $response["messages"] = "data models is not found!";
+          return json_encode($response);
+        } else {
+          $response["error"] = false;
+          $response['data'] = $data;
+          return json_encode($response);
+        }
+           
+      } catch(Exception $e) {
+          throw ('get_models error'. $e);
+      }
+    }
+
 
     public function get_merk(Request $request) {
       try {
@@ -20,7 +47,7 @@ class AjaxController extends Controller
         $data = Merk::where('category_id',$request->category_id)->get();
 
         if(count($data) == 0) {
-          $response["messages"] = "data is not found!";
+          $response["messages"] = "data merk is not found!";
           return json_encode($response);
         } else {
           $response["error"] = false;
@@ -29,7 +56,7 @@ class AjaxController extends Controller
         }
            
       } catch(Exception $e) {
-            throw ('updatestockprice error'. $e);
+            throw ('get_merk error'. $e);
         }
     }
 
