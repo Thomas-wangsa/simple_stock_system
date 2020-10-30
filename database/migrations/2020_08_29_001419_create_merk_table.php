@@ -15,12 +15,17 @@ class CreateMerkTable extends Migration
     {
         Schema::create('merk', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedInteger('category_id');
+            $table->unsignedBigInteger('category_id');
             $table->string('name');
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');     
             $table->timestamps();
             $table->softDeletes();
+
+
+            $table->unique('category_id','name');
+
+
         });
     }
 
@@ -30,7 +35,7 @@ class CreateMerkTable extends Migration
      * @return void
      */
     public function down()
-    {
+    {   
         Schema::dropIfExists('merk');
     }
 }

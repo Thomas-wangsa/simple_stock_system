@@ -58,7 +58,9 @@
                 href="{{ route('barangkeluar.index') }}"> Barang Keluar </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
+                <a 
+                class="nav-link <?php if(Request::path() == "admin") {echo "active";} ?>" 
+                href="{{ route('admin.index') }}"> Admin </a>
               </li> 
             </ul>
           </div> 

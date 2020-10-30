@@ -21,6 +21,8 @@ class CreateModelTable extends Migration
             $table->unsignedInteger('updated_by');     
             $table->timestamps();
             $table->softDeletes();
+
+            $table->unique('merk_id','name');
         });
     }
 

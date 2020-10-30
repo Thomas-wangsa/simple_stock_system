@@ -23,6 +23,8 @@ Route::resources([
     'barangmasuk' => 'BarangMasukController',
     'barangkeluar' => 'BarangKeluarController',
     'barangretur' => 'BarangReturController',
+    'admin' => 'AdminController',
+    'category' => 'CategoryController'
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');

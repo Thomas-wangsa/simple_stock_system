@@ -15,11 +15,12 @@ class CreateCategoryTable extends Migration
     {
         Schema::create('category', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');     
             $table->timestamps();
             $table->softDeletes();
+
         });
     }
 
