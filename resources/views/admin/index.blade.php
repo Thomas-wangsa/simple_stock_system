@@ -58,6 +58,12 @@
                   @endif
                 </td>
                 <td>
+                  @if($val->role != 2)
+                  <div class="btn btn-danger">
+                    Set Auth Rule  {{$val->name}}
+                  </div>
+                  @endif
+
                   <a class="btn btn-warning" href="{{route('admin.edit',$val->id)}}">
                     Edit {{$val->name}}
                   </a>

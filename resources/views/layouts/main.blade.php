@@ -63,7 +63,23 @@
                 href="{{ route('admin.index') }}"> Admin </a>
               </li> 
             </ul>
+
+            
           </div> 
+
+          <ul class="navbar-nav justify-content-end">
+            <li class="nav-item">
+              <a class="nav-link" href="{{ route('logout') }}"
+                  onclick="event.preventDefault();
+                           document.getElementById('logout-form').submit();">
+                  <span class="glyphicon glyphicon-log-out"></span>
+                  Keluar
+              </a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+              </form>
+            </li>
+          </ul>
 
         </nav>
 

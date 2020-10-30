@@ -29,11 +29,41 @@ class DatabaseSeeder extends Seeder
             $this->populate_merk();
             $this->populate_models();
         }
+        $this->populate_rule();
         // $this->call(UsersTableSeeder::class);
     }
 
 
+    public function populate_rule() {
 
+        $data =array(
+            "view_admin_data",
+            "add_setting_parameter",
+            "edit_admin_data",
+            "view_barang_masuk",
+            "tambah_barang_masuk",
+            "view_barang_keluar",
+            "tambah_barang_keluar",
+            "print_invoice",
+            "print_barcode",
+            "set_stock_retur",
+            "delete_stock",
+        );
+
+
+        $full_data = array();
+        foreach($data as $val) {
+            $each_data = array(
+                'name'=>$val,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            );
+
+            array_push($full_data,$each_data);
+        }
+
+        Rule::insert($full_data);
+    }
 
 
     public function populate_category() {
