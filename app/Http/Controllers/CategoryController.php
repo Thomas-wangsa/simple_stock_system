@@ -15,6 +15,7 @@ class CategoryController extends Controller
 
     public function __construct(){
         $this->faker    = Faker::create();
+        $this->middleware('auth');
 
     }
     /**

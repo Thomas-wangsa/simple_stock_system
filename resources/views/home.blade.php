@@ -186,7 +186,14 @@
                 <td>  <input type="checkbox" onclick='handleClick("<?php echo $val->id;?>");'>&nbsp; </td>
                 @endif
 
-                <td> {{$no}} </td>
+                <td> 
+                  @if(!app('request')->input('trigger') )
+                  {{ ($data['stock']->currentpage()-1) 
+                  * $data['stock']->perpage() + $key + 1 }}
+                  @else
+                    {{$no}}
+                  @endif
+                </td>
                 <td> 
                   {{$val->category_name}}
                 </td>
@@ -217,10 +224,12 @@
 
 
                 <td>
+                    @if($val->status != 4)
                     <div class="btn-group-vertical">
                       <button type="button" class="btn btn-info" onclick="alert('on progress')">Info</button>
-                      <button type="button" class="btn btn-danger" onclick="alert('on progress')">Delete</button>
+                      <button type="button" class="btn btn-danger" onclick='delete_data("{{$val->id}}","{{$val->barcode}}")'>Delete</button>
                     </div>
+                    @endif
                 </td>
                 </tr>
                 <?php $no++; ?>
@@ -229,8 +238,32 @@
 
           </tbody>
         </table>
+       
   </div>
+  @if(!app('request')->input('trigger') )
+    <div class="float-right" style="margin-top: 20px!important"> 
+      {{ $data['stock']->appends(
+          [
+          'search' => Request::get('search'),
+          'select_barcode' => Request::get('select_barcode'),
+          'select_category' => Request::get('select_category'),
+          'select_merk' => Request::get('select_merk'),
+          'select_model' => Request::get('select_model'),
+          'select_penjual' => Request::get('select_penjual'),
+          'date_from_penjual' => Request::get('date_from_penjual'),
+          'date_to_penjual' => Request::get('date_to_penjual'),
 
+          'select_pembeli' => Request::get('select_pembeli'),
+          'date_from_pembeli' => Request::get('date_from_pembeli'),
+          'date_to_pembeli' => Request::get('date_to_pembeli'),
+          'select_status' => Request::get('select_status'),
+
+          ])
+
+      ->links() }}
+    </div>
+    <div class="clearfix"> </div>
+  @endif
 
 
 </div>
@@ -238,6 +271,12 @@
 
 <script type="text/javascript">
   
+  function delete_data(id,name) {
+    if (confirm('Apakah anda yakin ingin menghapus data '+name+' ?')) {
+      window.location = "{{route('stock.delete_stock')}}?id="+id;
+    }
+  }
+
   $(document).ready(function() { 
     $.ajaxSetup({
         headers: {

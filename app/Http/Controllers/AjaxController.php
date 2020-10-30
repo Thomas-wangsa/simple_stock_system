@@ -10,7 +10,12 @@ use App\Models;
 use DB;
 use Exception;
 class AjaxController extends Controller
-{ 
+{   
+
+   public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
 
   public function get_models(Request $request) {

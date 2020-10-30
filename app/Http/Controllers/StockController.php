@@ -6,7 +6,31 @@ use App\Stock;
 use Illuminate\Http\Request;
 
 class StockController extends Controller
-{
+{   
+    protected $redirectTo      = 'home';
+    public function __construct(){
+        $this->middleware('auth');
+
+    }
+
+
+    public function delete_stock(Request $request) {
+        try {
+            $id = $request->id;
+
+            $result = Stock::where('id', $id)
+            ->take(1)
+            ->update(['status' => 4]);
+
+            $request->session()->flash('alert-success', 'delete sukses!');
+            return redirect()->route($this->redirectTo);
+            # return view('layouts.test', ['data' => $data]);
+            
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
+    }
     /**
      * Display a listing of the resource.
      *
@@ -80,6 +104,6 @@ class StockController extends Controller
      */
     public function destroy(Stock $stock)
     {
-        //
+
     }
 }

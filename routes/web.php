@@ -18,7 +18,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-
+Route::get("/stock/delete_stock","StockController@delete_stock")->name('stock.delete_stock');
 Route::resources([
     'barangmasuk' => 'BarangMasukController',
     'barangkeluar' => 'BarangKeluarController',
@@ -36,3 +36,4 @@ Route::post("/ajax/updatestockprice","AjaxController@updatestockprice")->name('a
 Route::post("/ajax/updatetotalstockprice","AjaxController@updatetotalstockprice")->name('ajax.updatetotalstockprice');
 Route::post("/ajax/get_merk","AjaxController@get_merk")->name('ajax.get_merk');
 Route::post("/ajax/get_models","AjaxController@get_models")->name('ajax.get_models');
+

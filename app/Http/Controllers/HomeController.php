@@ -30,6 +30,7 @@ class HomeController extends Controller
         $search = $request->input('search');
 
         $stock = array();
+        $paginate = 20;
         
         if($trigger == "on") {    
             $trigger_from = $request->input('trigger_from');
@@ -133,24 +134,26 @@ class HomeController extends Controller
             }
 
 
-            if ($request->input('select_limit')) {
-                $abstract_stock = $abstract_stock->limit($request->input('select_limit'));
-            }
-
-
             if ($request->input('select_order')) {
                 $abstract_stock = $abstract_stock->orderBy('id',$request->input('select_order'));
             }
 
-            $stock = $abstract_stock
+            $abstract_stock = $abstract_stock
             ->select(
                 'stock.*',
                 'uc.name AS created_by_name',
                 'up.name AS updated_by_name',
                 'category.name AS category_name',
                 'merk.name AS merk_name',
-                'models.name AS models_name')
-            ->get();
+                'models.name AS models_name');
+
+            if ($request->input('select_limit')) {
+                $abstract_stock = $abstract_stock->paginate($request->input('select_limit'));
+            } else {
+                $abstract_stock = $abstract_stock->paginate($paginate);
+            }
+
+            $stock = $abstract_stock;
 
         } else {
             $stock = Stock::leftJoin('category','category.id','=','stock.category_id')
@@ -166,7 +169,7 @@ class HomeController extends Controller
                 'category.name AS category_name',
                 'merk.name AS merk_name',
                 'models.name AS models_name')
-            ->get();
+            ->paginate($paginate);
         }
 
         

@@ -9,6 +9,12 @@ use App\Stock;
 class BarangReturController extends Controller
 {   
     protected $redirectTo      = 'home';
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *

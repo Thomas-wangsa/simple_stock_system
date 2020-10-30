@@ -21,6 +21,7 @@ class BarangMasukController extends Controller
 
     public function __construct(){
         $this->faker    = Faker::create();
+        $this->middleware('auth');
 
     }
     /**
@@ -93,7 +94,7 @@ class BarangMasukController extends Controller
                 for ($x = 1; $x <= $data->jumlah_barang; $x++) {
                     $now = now();
 
-                    $barcode = substr($data_category,0,2).substr($data_merk,0,2).substr($data_models,0,2)."_".$x."_".substr($this->faker->uuid,0,7);
+                    $barcode = substr($data_category,0,2).substr($data_merk,0,3).substr($data_models,0,2)."-".substr($this->faker->uuid,0,7);
 
                     $each_data = array();
                     $each_data["category_id"] = $request->kategori;
@@ -115,10 +116,8 @@ class BarangMasukController extends Controller
 
                 } 
 
-
                 $data->save();
                 Stock::insert($full_each_data);
-
                 
             });
             $request->session()->flash('alert-success', "data ".$request->tgl_pembelian.' has been created');
