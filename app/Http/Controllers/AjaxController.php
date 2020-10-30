@@ -4,9 +4,35 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Stock;
+use App\Merk;
 use DB;
+use Exception;
 class AjaxController extends Controller
-{
+{ 
+
+    public function get_merk(Request $request) {
+      try {
+        $response = [
+          "error" => true,
+          "messages"=> null,
+          "data" => null
+        ];
+        $data = Merk::where('category_id',$request->category_id)->get();
+
+        if(count($data) == 0) {
+          $response["messages"] = "data is not found!";
+          return json_encode($response);
+        } else {
+          $response["error"] = false;
+          $response['data'] = $data;
+          return json_encode($response);
+        }
+           
+      } catch(Exception $e) {
+            throw ('updatestockprice error'. $e);
+        }
+    }
+
     public function updatestockprice(Request $request) {
 
     	try {

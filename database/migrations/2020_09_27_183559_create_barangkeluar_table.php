@@ -22,10 +22,20 @@ class CreateBarangkeluarTable extends Migration
             $table->mediumInteger('durasi_garansi')->unsigned();
             $table->mediumInteger('total_harga')->unsigned();
             $table->uuid('uuid');
-            $table->unsignedInteger('created_by');
-            $table->unsignedInteger('updated_by');     
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by');     
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('created_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
+            $table->foreign('updated_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
         });
     }
 

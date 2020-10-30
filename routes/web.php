@@ -24,10 +24,13 @@ Route::resources([
     'barangkeluar' => 'BarangKeluarController',
     'barangretur' => 'BarangReturController',
     'admin' => 'AdminController',
-    'category' => 'CategoryController'
+    'category' => 'CategoryController',
+    'merk' => 'MerkController',
+    'model'=> 'ModelsController'
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::post("/ajax/updatestockprice","AjaxController@updatestockprice")->name('ajax.updatestockprice');
 Route::post("/ajax/updatetotalstockprice","AjaxController@updatetotalstockprice")->name('ajax.updatetotalstockprice');
+Route::post("/ajax/get_merk","AjaxController@get_merk")->name('ajax.get_merk');

@@ -17,15 +17,28 @@ class CreateMerkTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('category_id');
             $table->string('name');
-            $table->unsignedInteger('created_by');
-            $table->unsignedInteger('updated_by');     
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by');     
             $table->timestamps();
             $table->softDeletes();
 
 
-            $table->unique('category_id','name');
+            $table->unique(['category_id','name']);
 
+            $table->foreign('category_id')
+              ->references('id')->on('category')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
 
+            $table->foreign('created_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
+            $table->foreign('updated_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
         });
     }
 

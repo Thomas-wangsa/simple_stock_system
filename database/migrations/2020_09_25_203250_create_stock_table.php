@@ -15,9 +15,9 @@ class CreateStockTable extends Migration
     {
         Schema::create('stock', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('kategori')->unsigned();
-            $table->integer('merk')->unsigned(); 
-            $table->integer('model')->unsigned();
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('merk_id'); 
+            $table->unsignedBigInteger('models_id');
             $table->integer('status')->unsigned();
             $table->string('penjual', 100);
             $table->date('tgl_pembelian'); 
@@ -33,10 +33,35 @@ class CreateStockTable extends Migration
 
             $table->uuid('uuid');
             $table->string('barcode', 100);
-            $table->unsignedInteger('created_by');
-            $table->unsignedInteger('updated_by');
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('category_id')
+              ->references('id')->on('category')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
+            $table->foreign('merk_id')
+              ->references('id')->on('merk')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
+            $table->foreign('models_id')
+              ->references('id')->on('models')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
+            $table->foreign('created_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
+            $table->foreign('updated_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
 
         });
     }

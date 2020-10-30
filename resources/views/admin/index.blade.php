@@ -13,6 +13,14 @@
       List Kategori
       </a>
 
+      <a class="btn btn-dark" href="{{ route('merk.index') }}">
+      List Merk
+      </a>
+
+      <a class="btn btn-danger" href="{{ route('model.index') }}">
+      List Model
+      </a>
+
       <table class="table table-bordered" style="margin-top: 10px">
           <thead>
             <tr>

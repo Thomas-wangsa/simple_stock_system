@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateBarangmasukTable extends Migration
+class CreateModelsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,32 +13,19 @@ class CreateBarangmasukTable extends Migration
      */
     public function up()
     {
-        Schema::create('barangmasuk', function (Blueprint $table) {
+        Schema::create('models', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->date('tgl_pembelian'); 
-            $table->mediumInteger('jumlah_barang')->unsigned();
-            $table->unsignedBigInteger('category_id');
-            $table->unsignedBigInteger('merk_id'); 
-            $table->unsignedBigInteger('models_id');
-            $table->string('penjual', 100);
-            $table->uuid('uuid');
+            $table->unsignedBigInteger('merk_id');
+            $table->string('name');
             $table->unsignedBigInteger('created_by');
             $table->unsignedBigInteger('updated_by');     
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('category_id')
-              ->references('id')->on('category')
-              ->onUpdate('cascade')
-              ->onDelete('restrict');
+            $table->unique(['merk_id','name']);
 
             $table->foreign('merk_id')
               ->references('id')->on('merk')
-              ->onUpdate('cascade')
-              ->onDelete('restrict');
-
-            $table->foreign('models_id')
-              ->references('id')->on('models')
               ->onUpdate('cascade')
               ->onDelete('restrict');
 
@@ -51,6 +38,7 @@ class CreateBarangmasukTable extends Migration
               ->references('id')->on('users')
               ->onUpdate('cascade')
               ->onDelete('restrict');
+
         });
     }
 
@@ -61,6 +49,6 @@ class CreateBarangmasukTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('barangmasuk');
+        Schema::dropIfExists('models');
     }
 }

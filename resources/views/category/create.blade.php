@@ -22,7 +22,7 @@
 
             </div>
 
-            <button type="submit" class="btn btn-block btn-dark">
+            <button type="submit" class="btn btn-block btn-success">
               TAMBAH KATEGORI
             </button>
           </form>

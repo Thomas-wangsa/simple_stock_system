@@ -16,10 +16,20 @@ class CreateCategoryTable extends Migration
         Schema::create('category', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name')->unique();
-            $table->unsignedInteger('created_by');
-            $table->unsignedInteger('updated_by');     
+            $table->unsignedBigInteger('created_by');
+            $table->unsignedBigInteger('updated_by');     
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('created_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
+
+            $table->foreign('updated_by')
+              ->references('id')->on('users')
+              ->onUpdate('cascade')
+              ->onDelete('restrict');
 
         });
     }
