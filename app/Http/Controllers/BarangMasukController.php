@@ -9,6 +9,7 @@ use App\Stock;
 use App\Category;
 use App\Models;
 use App\Merk;
+use App\UserRule;
 
 use Illuminate\Http\Request;
 use Faker\Factory as Faker;
@@ -18,6 +19,8 @@ class BarangMasukController extends Controller
 {   
     protected $faker;
     protected $redirectTo      = 'barangmasuk.index';
+    protected $selected_rule_id_5 = "5";
+    protected $selected_rule_id_6 = "6";
 
     public function __construct(){
         $this->faker    = Faker::create();
@@ -29,7 +32,18 @@ class BarangMasukController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index(Request $request) {
+
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_5)
+                        ->first();
+            $messages = "tidak ada akses ke menu barang masuk!";
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
 
         $barangmasuk = BarangMasuk::leftJoin('category','category.id','=','barangmasuk.category_id')
                         ->leftJoin('merk','merk.id','=','barangmasuk.merk_id')
@@ -76,6 +90,16 @@ class BarangMasukController extends Controller
     public function store(Request $request)
     {   
         try {
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_6)
+                            ->first();
+                $messages = "tidak ada akses ke tambah barang masuk!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
 
             if ($request->jumlah_barang < 1) {
                 throw new Exception('Please input the quantity;');
