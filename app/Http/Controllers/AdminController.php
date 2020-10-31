@@ -31,7 +31,6 @@ class AdminController extends Controller
      */
     public function index(Request $request)
     {   
-
         if(Auth::user()->role != 2) {
             $user_rule = UserRule::where('user_id',Auth::user()->id)
                         ->where("rule_id",$this->selected_rule_id_1)

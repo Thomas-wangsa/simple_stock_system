@@ -8,10 +8,14 @@ use Illuminate\Http\Request;
 use App\Category;
 use Faker\Factory as Faker;
 use Exception;
+use App\UserRule;
+
 class MerkController extends Controller
 {   
     protected $faker;
     protected $redirectTo      = 'merk.index';
+    protected $selected_rule_id_1 = "1";
+    protected $selected_rule_id_2 = "2";
 
     public function __construct(){
         $this->faker    = Faker::create();
@@ -23,8 +27,19 @@ class MerkController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {   
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_1)
+                        ->first();
+            $messages = "tidak ada akses ke menu admin!";
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
+
         $data = [
             "merk" => Merk::leftJoin('category','category.id','=','merk.category_id')
             ->leftJoin('users as uc','uc.id','=','category.created_by')
