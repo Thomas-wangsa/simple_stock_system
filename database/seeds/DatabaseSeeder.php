@@ -16,19 +16,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {	
+        $data = array(
+            "name"=>"admin",
+            "email"=>"admin@gmail.com",
+            "password"=>bcrypt(12345678),
+            "role"=>2
+        );
+        User::firstOrCreate($data);
+        
         if(env('ENV_STATUS', 'development') == 'development') {
-        	$data = array(
-                    "name"=>"admin",
-                    "email"=>"admin@gmail.com",
-                    "password"=>bcrypt(12345678),
-                    "role"=>2
-                );
-        	User::firstOrCreate($data);
-
             $this->populate_category();
             $this->populate_merk();
             $this->populate_models();
         }
+
+        
         $this->populate_rule();
         // $this->call(UsersTableSeeder::class);
     }
@@ -40,6 +42,7 @@ class DatabaseSeeder extends Seeder
             "view_admin_data",
             "add_setting_parameter",
             "edit_admin_data",
+            "set_rule",
             "view_barang_masuk",
             "tambah_barang_masuk",
             "view_barang_keluar",
@@ -48,7 +51,7 @@ class DatabaseSeeder extends Seeder
             "print_barcode",
             "set_stock_retur",
             "delete_stock",
-            "set_rule",
+            
         );
 
 

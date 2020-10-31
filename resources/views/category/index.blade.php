@@ -15,7 +15,7 @@
       kembali ke menu admin
       </a>
 
-      <a class="btn btn-primary" href="{{ route('category.create') }}">
+      <a class="btn btn-success" href="{{ route('category.create') }}">
       tambah kategori
       </a>
 
