@@ -7,6 +7,7 @@ use App\Stock;
 use App\Merk;
 use App\Models;
 use App\Rule;
+
 use Illuminate\Support\Facades\Auth;
 use Log;
 
@@ -14,9 +15,11 @@ use App\UserRule;
 
 use DB;
 use Exception;
+
+
 class AjaxController extends Controller
 {   
-
+  protected $selected_rule_id_4 = "4";
    public function __construct()
     {
         $this->middleware('auth');
@@ -81,6 +84,17 @@ class AjaxController extends Controller
     ];
     try {
         
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_4)
+                        ->first();
+            $messages = "tidak ada akses ke set rule user!";
+
+            if($user_rule == null || $user_rule->status == 0) {
+              $response['messages'] = $messages;
+              return json_encode($response);
+            }
+        }
 
         $list_user_rule = UserRule::where('user_id',$request->id)->get();
 

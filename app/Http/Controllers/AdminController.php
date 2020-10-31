@@ -17,6 +17,7 @@ class AdminController extends Controller
     protected $faker;
     protected $redirectTo      = 'admin.index';
     protected $selected_rule_id_1 = "1";
+    protected $selected_rule_id_3 = "3";
 
     public function __construct()
     {      
@@ -89,7 +90,22 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id, Request $request) {
+
+
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_3)
+                        ->first();
+            $messages = "tidak ada akses ke edit admin data!";
+
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
+
+
         $data = User::find($id);
 
 
@@ -106,6 +122,18 @@ class AdminController extends Controller
     public function update(Request $request, $id)
     {   
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_3)
+                            ->first();
+                $messages = "tidak ada akses ke edit admin data!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
             $data = User::find($id);
             $data->name = $request->name;
             $data->email = $request->email;
