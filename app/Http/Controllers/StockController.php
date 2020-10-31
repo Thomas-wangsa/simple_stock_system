@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\Stock;
 use App\BarangKeluar;
+use App\UserRule;
 
 use Illuminate\Http\Request;
 use PDF;
@@ -11,6 +13,9 @@ use Exception;
 class StockController extends Controller
 {   
     protected $redirectTo      = 'home';
+    protected $selected_rule_id_9 = "9";
+    protected $selected_rule_id_10 = "10";
+    protected $selected_rule_id_12 = "12";
     public function __construct(){
         $this->middleware('auth');
 
@@ -19,6 +24,17 @@ class StockController extends Controller
 
     public function print_invoice(Request $request) {
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_9)
+                            ->first();
+                $messages = "tidak ada akses ke print invoice!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
             //dd($request);
             // $stock = $request->input('stock');
 
@@ -56,6 +72,18 @@ class StockController extends Controller
 
     public function print_stock(Request $request) {
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_10)
+                            ->first();
+                $messages = "tidak ada akses ke print barcode!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
             $stock = $request->input('stock');
 
             if(!$stock) {
@@ -84,6 +112,18 @@ class StockController extends Controller
 
     public function delete_stock(Request $request) {
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_12)
+                            ->first();
+                $messages = "tidak ada akses ke delete data!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
             $id = $request->id;
 
             $result = Stock::where('id', $id)

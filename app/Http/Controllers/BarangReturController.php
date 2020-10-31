@@ -1,14 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use App\BarangRetur;
 use Illuminate\Http\Request;
 use App\Stock;
+use App\UserRule;
 
 class BarangReturController extends Controller
 {   
     protected $redirectTo      = 'home';
+    protected $selected_rule_id_11 = "11";
 
     public function __construct()
     {
@@ -33,6 +36,18 @@ class BarangReturController extends Controller
     public function create(Request $request)
     {
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_11)
+                            ->first();
+                $messages = "tidak ada akses ke set retur!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
             $stock = $request->input('stock');
 
             if(!$stock) {

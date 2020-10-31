@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use App\UserRule;
 
 use App\BarangKeluar;
 use Illuminate\Http\Request;
@@ -14,6 +15,8 @@ class BarangKeluarController extends Controller
 {   
     protected $redirectTo      = 'barangkeluar.index';
     protected $redirectToCreate      = 'barangkeluar.create';
+    protected $selected_rule_id_7 = "7";
+    protected $selected_rule_id_8 = "8";
 
     public function __construct(){
         $this->faker    = Faker::create();
@@ -25,8 +28,18 @@ class BarangKeluarController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+    public function index(Request $request)
+    {   
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_7)
+                        ->first();
+            $messages = "tidak ada akses ke menu barang keluar!";
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
         $data = [
             "barangkeluar" => BarangKeluar::orderBy('created_at', 'desc')->paginate(20),
         ];
@@ -44,6 +57,18 @@ class BarangKeluarController extends Controller
     {   
 
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_8)
+                            ->first();
+                $messages = "tidak ada akses ke tambah barang keluar!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
             $stock = $request->input('stock');
 
             if(!$stock) {
@@ -90,6 +115,19 @@ class BarangKeluarController extends Controller
     public function store(Request $request)
     {   
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_8)
+                            ->first();
+                $messages = "tidak ada akses ke tambah barang keluar!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
+            
             $stock = $request->stock_list;
 
             if(!$stock) {
