@@ -69,6 +69,9 @@
 
           <ul class="navbar-nav justify-content-end">
             <li class="nav-item">
+              <a class="nav-link" href="#"> Hello {{Auth::user()->name}}</a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link" href="{{ route('logout') }}"
                   onclick="event.preventDefault();
                            document.getElementById('logout-form').submit();">
