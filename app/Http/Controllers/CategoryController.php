@@ -41,7 +41,7 @@ class CategoryController extends Controller
 
         $data = [
             "category" => Category::leftJoin('users as uc','uc.id','=','category.created_by')
-            ->leftJoin('users as up','up.id','=','category.created_by')
+            ->leftJoin('users as up','up.id','=','category.updated_by')
             ->select('category.*','uc.name AS created_by_name','up.name AS updated_by_name')
             ->get(),
         ];
@@ -55,8 +55,18 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(Request $request)
+    {   
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_2)
+                        ->first();
+            $messages = "tidak ada akses ke setting parameter!";
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
         try {
             $data = [
 
@@ -76,11 +86,21 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {   
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_2)
+                        ->first();
+            $messages = "tidak ada akses ke setting parameter!";
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
         try {
             $clean_name = strtoupper(trim($request->name,' '));
 
-            if(len($clean_name) < 3) {
+            if(strlen($clean_name) < 3) {
                 $request->session()->flash('alert-warning', "panjang character kurang dari 3");
                 return redirect()->route($this->redirectTo);
             }
@@ -126,7 +146,17 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Category $category,Request $request)
-    {
+    {   
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_2)
+                        ->first();
+            $messages = "tidak ada akses ke setting parameter!";
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
         try {
             $data = [
                 'category' => $category
@@ -151,9 +181,20 @@ class CategoryController extends Controller
     {
         try {
 
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_2)
+                            ->first();
+                $messages = "tidak ada akses ke setting parameter!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
             $clean_name = strtoupper(trim($request->name,' '));
 
-            if(len($clean_name) < 3) {
+            if(strlen($clean_name) < 3) {
                 $request->session()->flash('alert-warning', "panjang character kurang dari 3");
                 return redirect()->route($this->redirectTo);
             }

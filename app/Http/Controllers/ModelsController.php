@@ -44,8 +44,8 @@ class ModelsController extends Controller
         $data = [
             "model" => Models::leftJoin('merk','merk.id','=','models.merk_id')
             ->leftJoin('category','category.id','=','merk.category_id')
-            ->leftJoin('users as uc','uc.id','=','category.created_by')
-            ->leftJoin('users as up','up.id','=','category.created_by')
+            ->leftJoin('users as uc','uc.id','=','models.created_by')
+            ->leftJoin('users as up','up.id','=','models.created_by')
             ->select(
                 'models.*',
                 'uc.name AS created_by_name',
@@ -64,8 +64,18 @@ class ModelsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create(Request $request)
+    {   
+        if(Auth::user()->role != 2) {
+            $user_rule = UserRule::where('user_id',Auth::user()->id)
+                        ->where("rule_id",$this->selected_rule_id_2)
+                        ->first();
+            $messages = "tidak ada akses ke setting parameter!";
+            if($user_rule == null || $user_rule->status == 0) {
+                $request->session()->flash('alert-danger', $messages);
+                return redirect()->route('home');
+            }
+        }
         try {
             $data = [
                 'category' => Category::all()
@@ -87,9 +97,19 @@ class ModelsController extends Controller
     public function store(Request $request)
     {
         try {
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_2)
+                            ->first();
+                $messages = "tidak ada akses ke setting parameter!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
             $clean_name = strtoupper(trim($request->name,' '));
 
-            if(len($clean_name) < 3) {
+            if(strlen($clean_name) < 3) {
                 $request->session()->flash('alert-warning', "panjang character kurang dari 3");
                 return redirect()->route($this->redirectTo);
             }
@@ -138,6 +158,18 @@ class ModelsController extends Controller
     {
         try {
 
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_2)
+                            ->first();
+                $messages = "tidak ada akses ke setting parameter!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
+
+
             $models = Models::find($request->id);
 
             if($models == null) {
@@ -172,6 +204,17 @@ class ModelsController extends Controller
     public function update(Request $request, Models $models)
     {
         try {
+
+            if(Auth::user()->role != 2) {
+                $user_rule = UserRule::where('user_id',Auth::user()->id)
+                            ->where("rule_id",$this->selected_rule_id_2)
+                            ->first();
+                $messages = "tidak ada akses ke setting parameter!";
+                if($user_rule == null || $user_rule->status == 0) {
+                    $request->session()->flash('alert-danger', $messages);
+                    return redirect()->route('home');
+                }
+            }
             $models = Models::find($request->model_id);
 
             if($models == null) {
@@ -181,7 +224,7 @@ class ModelsController extends Controller
 
             $clean_name = strtoupper(trim($request->name,' '));
 
-            if(len($clean_name) < 3) {
+            if(strlen($clean_name) < 3) {
                 $request->session()->flash('alert-warning', "panjang character kurang dari 3");
                 return redirect()->route($this->redirectTo);
             }
