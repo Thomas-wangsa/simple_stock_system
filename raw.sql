@@ -31,12 +31,16 @@ CREATE TABLE `barangkeluar` (
   `durasi_garansi` mediumint(8) unsigned NOT NULL,
   `total_harga` mediumint(8) unsigned NOT NULL,
   `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_by` int(10) unsigned NOT NULL,
-  `updated_by` int(10) unsigned NOT NULL,
+  `created_by` bigint(20) unsigned NOT NULL,
+  `updated_by` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `barangkeluar_created_by_foreign` (`created_by`),
+  KEY `barangkeluar_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `barangkeluar_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `barangkeluar_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -60,17 +64,27 @@ CREATE TABLE `barangmasuk` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   `tgl_pembelian` date NOT NULL,
   `jumlah_barang` mediumint(8) unsigned NOT NULL,
-  `kategori` int(10) unsigned NOT NULL,
-  `merk` int(10) unsigned NOT NULL,
-  `model` int(10) unsigned NOT NULL,
+  `category_id` bigint(20) unsigned NOT NULL,
+  `merk_id` bigint(20) unsigned NOT NULL,
+  `models_id` bigint(20) unsigned NOT NULL,
   `penjual` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_by` int(10) unsigned NOT NULL,
-  `updated_by` int(10) unsigned NOT NULL,
+  `created_by` bigint(20) unsigned NOT NULL,
+  `updated_by` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `barangmasuk_category_id_foreign` (`category_id`),
+  KEY `barangmasuk_merk_id_foreign` (`merk_id`),
+  KEY `barangmasuk_models_id_foreign` (`models_id`),
+  KEY `barangmasuk_created_by_foreign` (`created_by`),
+  KEY `barangmasuk_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `barangmasuk_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `barangmasuk_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `barangmasuk_merk_id_foreign` FOREIGN KEY (`merk_id`) REFERENCES `merk` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `barangmasuk_models_id_foreign` FOREIGN KEY (`models_id`) REFERENCES `models` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `barangmasuk_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -81,6 +95,39 @@ CREATE TABLE `barangmasuk` (
 LOCK TABLES `barangmasuk` WRITE;
 /*!40000 ALTER TABLE `barangmasuk` DISABLE KEYS */;
 /*!40000 ALTER TABLE `barangmasuk` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `category`
+--
+
+DROP TABLE IF EXISTS `category`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `category` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_by` bigint(20) unsigned NOT NULL,
+  `updated_by` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `category_name_unique` (`name`),
+  KEY `category_created_by_foreign` (`created_by`),
+  KEY `category_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `category_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `category_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `category`
+--
+
+LOCK TABLES `category` WRITE;
+/*!40000 ALTER TABLE `category` DISABLE KEYS */;
+/*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -111,6 +158,41 @@ LOCK TABLES `failed_jobs` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `merk`
+--
+
+DROP TABLE IF EXISTS `merk`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `merk` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `category_id` bigint(20) unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_by` bigint(20) unsigned NOT NULL,
+  `updated_by` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `merk_category_id_name_unique` (`category_id`,`name`),
+  KEY `merk_created_by_foreign` (`created_by`),
+  KEY `merk_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `merk_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `merk_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `merk_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `merk`
+--
+
+LOCK TABLES `merk` WRITE;
+/*!40000 ALTER TABLE `merk` DISABLE KEYS */;
+/*!40000 ALTER TABLE `merk` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `migrations`
 --
 
@@ -122,7 +204,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -131,8 +213,43 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (37,'2014_10_12_000000_create_users_table',1),(38,'2014_10_12_100000_create_password_resets_table',1),(39,'2019_08_19_000000_create_failed_jobs_table',1),(40,'2020_09_25_200317_create_barangmasuk_table',1),(41,'2020_09_25_203250_create_stock_table',1),(42,'2020_09_27_183559_create_barangkeluar_table',1);
+INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2019_08_19_000000_create_failed_jobs_table',1),(4,'2020_08_10_200019_create_rule_table',1),(5,'2020_08_12_200223_create_user_rule_table',1),(6,'2020_08_29_001352_create_category_table',1),(7,'2020_08_29_001419_create_merk_table',1),(8,'2020_08_30_003413_create_models_table',1),(9,'2020_09_25_200317_create_barangmasuk_table',1),(10,'2020_09_25_203250_create_stock_table',1),(11,'2020_09_27_183559_create_barangkeluar_table',1),(12,'2020_10_17_075321_create_barang_retur_table',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `models`
+--
+
+DROP TABLE IF EXISTS `models`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `models` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `merk_id` bigint(20) unsigned NOT NULL,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_by` bigint(20) unsigned NOT NULL,
+  `updated_by` bigint(20) unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `models_merk_id_name_unique` (`merk_id`,`name`),
+  KEY `models_created_by_foreign` (`created_by`),
+  KEY `models_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `models_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `models_merk_id_foreign` FOREIGN KEY (`merk_id`) REFERENCES `merk` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `models_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `models`
+--
+
+LOCK TABLES `models` WRITE;
+/*!40000 ALTER TABLE `models` DISABLE KEYS */;
+/*!40000 ALTER TABLE `models` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -160,6 +277,33 @@ LOCK TABLES `password_resets` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `rule`
+--
+
+DROP TABLE IF EXISTS `rule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rule` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rule`
+--
+
+LOCK TABLES `rule` WRITE;
+/*!40000 ALTER TABLE `rule` DISABLE KEYS */;
+INSERT INTO `rule` VALUES (1,'view_admin_data','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(2,'add_setting_parameter','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(3,'edit_admin_data','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(4,'set_rule','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(5,'view_barang_masuk','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(6,'tambah_barang_masuk','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(7,'view_barang_keluar','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(8,'tambah_barang_keluar','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(9,'print_invoice','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(10,'print_barcode','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(11,'set_stock_retur','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(12,'delete_stock','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL);
+/*!40000 ALTER TABLE `rule` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `stock`
 --
 
@@ -168,9 +312,9 @@ DROP TABLE IF EXISTS `stock`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `stock` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `kategori` int(10) unsigned NOT NULL,
-  `merk` int(10) unsigned NOT NULL,
-  `model` int(10) unsigned NOT NULL,
+  `category_id` bigint(20) unsigned NOT NULL,
+  `merk_id` bigint(20) unsigned NOT NULL,
+  `models_id` bigint(20) unsigned NOT NULL,
   `status` int(10) unsigned NOT NULL,
   `penjual` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `tgl_pembelian` date NOT NULL,
@@ -183,12 +327,22 @@ CREATE TABLE `stock` (
   `uuid_barang_keluar` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
   `barcode` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_by` int(10) unsigned NOT NULL,
-  `updated_by` int(10) unsigned NOT NULL,
+  `created_by` bigint(20) unsigned NOT NULL,
+  `updated_by` bigint(20) unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `stock_category_id_foreign` (`category_id`),
+  KEY `stock_merk_id_foreign` (`merk_id`),
+  KEY `stock_models_id_foreign` (`models_id`),
+  KEY `stock_created_by_foreign` (`created_by`),
+  KEY `stock_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `stock_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `category` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `stock_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `stock_merk_id_foreign` FOREIGN KEY (`merk_id`) REFERENCES `merk` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `stock_models_id_foreign` FOREIGN KEY (`models_id`) REFERENCES `models` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `stock_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -199,6 +353,38 @@ CREATE TABLE `stock` (
 LOCK TABLES `stock` WRITE;
 /*!40000 ALTER TABLE `stock` DISABLE KEYS */;
 /*!40000 ALTER TABLE `stock` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user_rule`
+--
+
+DROP TABLE IF EXISTS `user_rule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_rule` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `rule_id` bigint(20) unsigned NOT NULL,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `status` int(10) unsigned NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_rule_rule_id_foreign` (`rule_id`),
+  KEY `user_rule_user_id_foreign` (`user_id`),
+  CONSTRAINT `user_rule_rule_id_foreign` FOREIGN KEY (`rule_id`) REFERENCES `rule` (`id`) ON UPDATE CASCADE,
+  CONSTRAINT `user_rule_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_rule`
+--
+
+LOCK TABLES `user_rule` WRITE;
+/*!40000 ALTER TABLE `user_rule` DISABLE KEYS */;
+/*!40000 ALTER TABLE `user_rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -214,12 +400,13 @@ CREATE TABLE `users` (
   `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` int(10) unsigned NOT NULL DEFAULT '1',
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,6 +415,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'admin','admin@gmail.com',NULL,'$2y$10$UwtfSuHbE4mawSiRVydXK.6u0qlMdDXYBsQqVNpwMxZCoPQOzih8m',2,NULL,'2020-10-31 01:02:12','2020-10-31 01:02:12');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -240,4 +428,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-05  0:02:43
+-- Dump completed on 2020-10-31 15:03:04
