@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use App\Rule;
+
 use Faker\Factory as Faker;
 
 class AdminController extends Controller
@@ -27,6 +29,7 @@ class AdminController extends Controller
     {
         $data = [
             "users" => User::paginate(20),
+            "rule" => Rule::all()
         ];
         # return view('layouts.test', ['data' => $data]);
 

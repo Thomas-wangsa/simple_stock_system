@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
             "print_barcode",
             "set_stock_retur",
             "delete_stock",
+            "set_rule",
         );
 
 

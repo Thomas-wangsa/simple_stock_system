@@ -40,4 +40,7 @@ Route::post("/ajax/updatestockprice","AjaxController@updatestockprice")->name('a
 Route::post("/ajax/updatetotalstockprice","AjaxController@updatetotalstockprice")->name('ajax.updatetotalstockprice');
 Route::post("/ajax/get_merk","AjaxController@get_merk")->name('ajax.get_merk');
 Route::post("/ajax/get_models","AjaxController@get_models")->name('ajax.get_models');
+Route::post("/ajax/get_user_rule","AjaxController@get_user_rule")->name('ajax.get_user_rule');
+Route::post("/ajax/aktifkan_rule_user","AjaxController@aktifkan_rule_user")->name('ajax.aktifkan_rule_user');
+Route::post("/ajax/matikan_rule_user","AjaxController@matikan_rule_user")->name('ajax.matikan_rule_user');
 
