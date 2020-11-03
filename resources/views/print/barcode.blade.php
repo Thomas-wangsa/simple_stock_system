@@ -12,14 +12,14 @@
 		}
 	</style>
 	<center>
-		<h5> List Barcode </h4>
+		<h5> List Kode Barang </h4>
 	</center>
 
 	<table class='table table-bordered'>
 		<thead>
 			<tr>
 				<th>No</th>
-				<th>Barcode</th>
+				<th>Kode Barang</th>
 			</tr>
 		</thead>
 		<tbody>

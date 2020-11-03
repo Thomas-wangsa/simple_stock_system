@@ -58,12 +58,12 @@
           </div>
 
           <div class="col">
-            <input type="text" class="form-control datepicker_class" placeholder="dari tanggal" 
+            <input type="text" class="form-control datepicker_class" placeholder="tgl barang masuk mulai" 
             name="date_from_penjual"  value="{{app('request')->input('date_from_penjual')}}">
           </div>
 
           <div class="col">
-            <input type="text" class="form-control datepicker_class" placeholder="ke tanggal" 
+            <input type="text" class="form-control datepicker_class" placeholder="tgl barang masuk akhir" 
             name="date_to_penjual" value="{{app('request')->input('date_to_penjual')}}">
           </div>
 
@@ -78,12 +78,12 @@
           </div>
 
           <div class="col">
-            <input type="text" class="form-control datepicker_class" placeholder="dari tanggal" 
+            <input type="text" class="form-control datepicker_class" placeholder="tgl barang keluar mulai" 
             name="date_from_pembeli" value="{{app('request')->input('date_from_pembeli')}}">
           </div>
 
           <div class="col">
-            <input type="text" class="form-control datepicker_class" placeholder="ke tanggal" 
+            <input type="text" class="form-control datepicker_class" placeholder="tgl barang keluar akhir" 
             name="date_to_pembeli" value="{{app('request')->input('date_to_pembeli')}}">
           </div>
 
@@ -110,6 +110,8 @@
               <option value="50" <?php if(app('request')->input('select_limit') == 50) echo "selected" ?>> 50 </option>
               <option value="100" <?php if(app('request')->input('select_limit') == 100) echo "selected" ?>> 100 </option>
               <option value="200" <?php if(app('request')->input('select_limit') == 200) echo "selected" ?>> 200 </option>
+              <option value="500" <?php if(app('request')->input('select_limit') == 500) echo "selected" ?>> 500 </option>
+              <option value="1000" <?php if(app('request')->input('select_limit') == 1000) echo "selected" ?>> 1000 </option>
             </select>
           </div>
 
@@ -166,7 +168,7 @@
               <th> Merk</th>
               <th> Model</th>
               <th> Status </th>
-              <th> Barcode </th>
+              <th> Kode Barang </th>
               <th> Penjual </th>
               <th> Pembeli </th>
               <th> Action </th>
@@ -221,14 +223,23 @@
                 </td>
                 <td> {{$val->penjual}} </td>
                 <td> {{$val->pembeli}} </td>
-                
-
-
                 <td>
                     @if($val->status != 4)
                     <div class="btn-group-vertical">
+
+
+                      @if($val->status == 3 && Auth::user()->role == 2)
+                      <button type="button" class="btn btn-warning" 
+                      onclick='rollback_retur("{{$val->id}}","{{$val->barcode}}")'>
+                        Rollback retur
+                      </button>
+                      @endif
       
-                      <button type="button" class="btn btn-danger" onclick='delete_data("{{$val->id}}","{{$val->barcode}}")'>Delete</button>
+                      <button type="button" class="btn btn-danger" 
+                      onclick='delete_data("{{$val->id}}","{{$val->barcode}}")'>
+                        Delete
+                      </button>
+
                     </div>
                     @endif
                 </td>
@@ -274,6 +285,12 @@
 
 <script type="text/javascript">
   
+  function rollback_retur(id,name) {
+    if (confirm('Apakah anda yakin ingin rollback data '+name+' ke barang keluar ?')) {
+      window.location = "{{route('stock.rollback_retur')}}?id="+id;
+    }
+  }
+
   function delete_data(id,name) {
     if (confirm('Apakah anda yakin ingin menghapus data '+name+' ?')) {
       window.location = "{{route('stock.delete_stock')}}?id="+id;

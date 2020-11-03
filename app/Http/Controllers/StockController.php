@@ -110,6 +110,39 @@ class StockController extends Controller
 
     }
 
+
+    public function rollback_retur(Request $request) {
+        try {
+            if(Auth::user()->role != 2) {
+                // $user_rule = UserRule::where('user_id',Auth::user()->id)
+                //             ->where("rule_id",$this->selected_rule_id_12)
+                //             ->first();
+                // $messages = "tidak ada akses ke delete data!";
+                // if($user_rule == null || $user_rule->status == 0) {
+                //     $request->session()->flash('alert-danger', $messages);
+                //     return redirect()->route('home');
+                // }
+
+                $request->session()->flash('alert-danger', "tidak ada akses");
+                return redirect()->route('home');
+            }
+
+            $id = $request->id;
+
+            $result = Stock::where('id', $id)
+            ->take(1)
+            ->update(['status' => 2]);
+
+            $request->session()->flash('alert-success', 'rollback sukses!');
+            return redirect()->route($this->redirectTo);
+            # return view('layouts.test', ['data' => $data]);
+            
+        } catch(Exception $e) {
+            $request->session()->flash('alert-danger', $e->getMessage());
+            return redirect()->route($this->redirectTo);
+        }
+    }
+
     public function delete_stock(Request $request) {
         try {
 

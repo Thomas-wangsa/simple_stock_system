@@ -7,6 +7,11 @@
   <div class="table-responsive">
       <!-- Button to Open the Modal -->
 
+      <a class="btn btn-info" href="{{ route('home') }}">
+      kembali ke dashboard
+      </a>
+
+      <br/> <br/>
 
       <form method="POST"  action="{{ route('barangkeluar.store') }}">
           {{ csrf_field() }}
@@ -69,7 +74,7 @@
               <th>Merk</th>
               <th>Model</th> 
               <th>Status</th>
-              <th>Barcode</th>
+              <th>Kode Barang</th>
               <th>Harga Jual</th>   
               <th>Action</th>   
             </tr>

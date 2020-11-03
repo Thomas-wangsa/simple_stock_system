@@ -107,8 +107,8 @@ class MerkController extends Controller
         try {
             $clean_name = strtoupper(trim($request->name,' '));
 
-            if(strlen($clean_name) < 3) {
-                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+            if(strlen($clean_name) < 2) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 2");
                 return redirect()->route($this->redirectTo);
             }
 
@@ -201,8 +201,8 @@ class MerkController extends Controller
 
             $clean_name = strtoupper(trim($request->name,' '));
 
-            if(strlen($clean_name) < 3) {
-                $request->session()->flash('alert-warning', "panjang character kurang dari 3");
+            if(strlen($clean_name) < 2) {
+                $request->session()->flash('alert-warning', "panjang character kurang dari 2");
                 return redirect()->route($this->redirectTo);
             }
 
