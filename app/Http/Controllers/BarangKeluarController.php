@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use App\UserRule;
 
 use App\BarangKeluar;
+use App\Category;
+
 use Illuminate\Http\Request;
 use Exception;
 use App\Stock;
@@ -97,6 +99,7 @@ class BarangKeluarController extends Controller
             $data = [
                 "stock" => $stock,
                 "total_harga" => Stock::whereIn('id', $stock_array)->where('status',1)->sum('harga_jual'),
+                "category" =>  Category::all(),
             ];
             # return view('layouts.test', ['data' => $data]);
             return view('barangkeluar.create', ['data' => $data]);

@@ -26,6 +26,55 @@ class AjaxController extends Controller
     }
 
 
+
+  public function get_stock_from_models_id(Request $request) {
+    $response = [
+      "error" => true,
+      "messages"=> null,
+      "data" => null
+    ];
+
+    try {
+      $models_id = $request->models_id;
+
+      if($models_id == null) {
+        $response["messages"] = "models_id is not found!";
+        return json_encode($response);
+      }
+
+      $stock_array = explode(",", $request->current_stock);
+
+      if($stock_array < 1 ) {
+        $response["messages"] = "current stock is not found!";
+        return json_encode($response);
+      }
+
+
+      $data = Stock::leftJoin('models','models.id','=','stock.models_id')
+      ->where('models_id',$models_id)
+      ->where('status',1)
+      ->whereNotIn('stock.id', $stock_array)
+      ->select('stock.id','stock.status','stock.barcode','models.name AS model_name')
+      ->get();
+
+      if(count($data) < 1) {
+        $response["messages"] = "data stock is not found!";
+        return json_encode($response);
+      }
+
+      $response["data"] = $data;
+      $response["error"] = false;
+      return json_encode($response);
+
+    } catch(Exception $e) {
+      Log::error('get_stock_from_models_id error : '. $e);
+      $response["messages"] = $e;
+      return json_encode($response);
+    }
+
+
+  }
+
   public function matikan_rule_user(Request $request) {
     $response = [
       "error" => true,

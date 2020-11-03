@@ -46,3 +46,4 @@ Route::post("/ajax/get_user_rule","AjaxController@get_user_rule")->name('ajax.ge
 Route::post("/ajax/aktifkan_rule_user","AjaxController@aktifkan_rule_user")->name('ajax.aktifkan_rule_user');
 Route::post("/ajax/matikan_rule_user","AjaxController@matikan_rule_user")->name('ajax.matikan_rule_user');
 
+Route::post("/ajax/get_stock_from_models_id","AjaxController@get_stock_from_models_id")->name('ajax.get_stock_from_models_id');

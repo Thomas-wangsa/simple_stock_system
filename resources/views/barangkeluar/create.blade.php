@@ -116,7 +116,7 @@
                   <input class="form-control" type="number" id="row_{{$val->uuid}}" value="{{$val->harga_jual}}">
                 </td>
                 <td> 
-                  <div class="btn btn-success" id="btn_row_{{$val->uuid}}" onclick="update_harga('row_{{$val->uuid}}')"> set harga </div>
+                  <div class="btn btn-dark" id="btn_row_{{$val->uuid}}" onclick="update_harga('row_{{$val->uuid}}')"> set harga </div>
                 </td>
               </tr>
               <?php $no++; ?> 
@@ -126,8 +126,21 @@
         </table>
         
   </div>
+  <div class="float-right col-md-6" style="margin-top: 10px"> 
+    <div class="row">
+      <button type="button" class="btn btn-lg btn-success btn-block"
+      data-toggle="modal" data-target="#modal_add_support_barang"> 
+        Tambah Data Barang 
+      </button>
+    </div>
+  </div>
+  <div class="clearfix"> </div>
 
 </div>
+
+@include('barangkeluar.modal_tambah_barang')
+
+
 
 <script type="text/javascript">
   $.ajaxSetup({
