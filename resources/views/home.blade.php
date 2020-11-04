@@ -253,7 +253,13 @@
        
   </div>
   @if(!app('request')->input('trigger') )
-    <div class="float-right" style="margin-top: 20px!important"> 
+
+    <div class="float-right" style="margin-top: 12px!important"> 
+      <p class="float-right">
+        Showing {{($data['stock']->currentpage()-1)*$data['stock']->perpage()+1}} to {{$data['stock']->currentpage()*$data['stock']->perpage()}}
+        of  {{$data['stock']->total()}} entries
+      </p>
+      <div class="clearfix"> </div> 
       {{ $data['stock']->appends(
           [
           'search' => Request::get('search'),
