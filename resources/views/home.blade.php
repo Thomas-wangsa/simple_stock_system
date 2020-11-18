@@ -100,6 +100,7 @@
               <option value="2" <?php if(app('request')->input('select_status') == 2) echo "selected" ?>> Barang Keluar </option>
               <option value="3" <?php if(app('request')->input('select_status') == 3) echo "selected" ?>> Barang Retur </option>
               <option value="4" <?php if(app('request')->input('select_status') == 4 ) echo "selected" ?>> Barang Non-Active </option>
+              <option value="5" <?php if(app('request')->input('select_status') == 5 ) echo "selected" ?>> Barang Rusak </option>
             </select>
           </div>
 
@@ -146,6 +147,14 @@
 
       <div class="btn btn-success btn-block" id="btn_submit_barang_keluar" onclick="submit_barang_keluar()" hidden="">
       submit barang keluar
+      </div>
+
+      <div class="btn btn-danger btn-block" id="btn_submit_barang_rusak" onclick="submit_barang_rusak()" hidden="">
+      submit barang rusak
+      </div>
+
+      <div class="btn btn-primary btn-block" id="btn_restore_barang_rusak" onclick="restore_barang_rusak()" hidden="">
+      restore barang rusak
       </div>
 
       <div class="btn btn-danger btn-block" id="btn_submit_barang_retur" onclick="submit_barang_retur()" hidden="">
@@ -214,6 +223,8 @@
                     retur
                   @elseif($val->status == 4) 
                     Non-Active
+                  @elseif($val->status == 5) 
+                    Barang Rusak
                   @else
                     -
                   @endif 
@@ -234,6 +245,8 @@
                         Rollback retur
                       </button>
                       @endif
+
+
       
                       <button type="button" class="btn btn-danger" 
                       onclick='delete_data("{{$val->id}}","{{$val->barcode}}")'>
@@ -405,11 +418,15 @@
 
     if (!status || status == 1) {
       $("#btn_submit_barang_keluar").attr('hidden',false);
+      $('#btn_submit_barang_rusak').attr('hidden',false);
     } else if (status == 2) {
       $("#btn_submit_barang_retur").attr('hidden',false);
-    }else {
+    } else if (status == 5) {
+      $("#btn_restore_barang_rusak").attr('hidden',false);
+    } else {
       $("#btn_submit_barang_keluar").attr('hidden',true);
       $("#btn_submit_barang_retur").attr('hidden',true);
+      $('#btn_submit_barang_rusak').attr('hidden',true);
     }
 
     
@@ -419,6 +436,7 @@
     if(selected_item.length < 1) {
       $("#btn_submit_barang_keluar").attr('hidden',true);
       $("#btn_submit_barang_print").attr('hidden',true);
+      $('#btn_submit_barang_rusak').attr('hidden',true);
     } 
 
     console.log(selected_item);
@@ -442,7 +460,22 @@
     }
   }
 
+  function submit_barang_rusak() {
+    if(selected_item.length > 0) {
+      window.location = "{{ route('barangrusak.create')}}?stock="+selected_item;
+    } else {
+      alert("pilih barang terlebih dahulu;");
+    }
+  }
 
+
+  function restore_barang_rusak() {
+    if(selected_item.length > 0) {
+      window.location = "{{ route('barangrusak.restore')}}?stock="+selected_item;
+    } else {
+      alert("pilih barang terlebih dahulu;");
+    }
+  }
 
   function submit_barang_retur() {
 

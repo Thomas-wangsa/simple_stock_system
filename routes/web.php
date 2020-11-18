@@ -24,11 +24,14 @@ Route::get("/stock/rollback_retur","StockController@rollback_retur")->name('stoc
 Route::get("/stock/print_stock","StockController@print_stock")->name('stock.print_stock');
 Route::get("/stock/print_invoice","StockController@print_invoice")->name('stock.print_invoice');
 
+Route::get("/barangrusak/restore","BarangRusakController@restore")->name('barangrusak.restore');
+
 
 Route::resources([
     'barangmasuk' => 'BarangMasukController',
     'barangkeluar' => 'BarangKeluarController',
     'barangretur' => 'BarangReturController',
+    'barangrusak' => 'BarangRusakController',
     'admin' => 'AdminController',
     'category' => 'CategoryController',
     'merk' => 'MerkController',
