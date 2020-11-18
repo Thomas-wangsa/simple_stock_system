@@ -44,7 +44,7 @@ class AdminController extends Controller
         }
 
         $data = [
-            "users" => User::paginate(20),
+            "users" => User::withTrashed()->paginate(20),
             "rule" => Rule::all()
         ];
         # return view('layouts.test', ['data' => $data]);
@@ -79,9 +79,14 @@ class AdminController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
+    public function show($id, Request $request)
+    {   
+        $user = User::withTrashed()->where('id',$id)->first();
+        $user->restore();
+        $messages = $user->name. " sudah di aktifkan";
+        $request->session()->flash('alert-success', $messages);
+        return redirect()->route('admin.index');
+        //dd($id);
     }
 
     /**

@@ -58,15 +58,24 @@
                   @endif
                 </td>
                 <td>
-                  @if($val->role != 2)
-                  <div class="btn btn-danger" onclick='set_rule("{{$val->id}}")'>
-                    Set Auth Rule  {{$val->name}}
-                  </div>
-                  @endif
 
-                  <a class="btn btn-warning" href="{{route('admin.edit',$val->id)}}">
-                    Edit {{$val->name}}
-                  </a>
+                  @if($val->deleted_at != null) 
+                    <a class="btn btn-dark" href="{{route('admin.show',$val->id)}}">
+                      Aktifkan {{$val->name}}
+                    </a>
+
+                  @else 
+
+                    @if($val->role != 2)
+                    <div class="btn btn-danger" onclick='set_rule("{{$val->id}}")'>
+                      Set Auth Rule  {{$val->name}}
+                    </div>
+                    @endif
+
+                    <a class="btn btn-warning" href="{{route('admin.edit',$val->id)}}">
+                      Edit {{$val->name}}
+                    </a>
+                  @endif
                 </td>
 
               </tr>
