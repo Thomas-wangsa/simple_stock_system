@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.31, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.32, for Linux (x86_64)
 --
 -- Host: localhost    Database: stock
 -- ------------------------------------------------------
--- Server version	5.7.31-0ubuntu0.16.04.1
+-- Server version	5.7.32-0ubuntu0.16.04.1
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -204,7 +204,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -213,7 +213,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_resets_table',1),(3,'2019_08_19_000000_create_failed_jobs_table',1),(4,'2020_08_10_200019_create_rule_table',1),(5,'2020_08_12_200223_create_user_rule_table',1),(6,'2020_08_29_001352_create_category_table',1),(7,'2020_08_29_001419_create_merk_table',1),(8,'2020_08_30_003413_create_models_table',1),(9,'2020_09_25_200317_create_barangmasuk_table',1),(10,'2020_09_25_203250_create_stock_table',1),(11,'2020_09_27_183559_create_barangkeluar_table',1),(12,'2020_10_17_075321_create_barang_retur_table',1);
+INSERT INTO `migrations` VALUES (61,'2014_10_12_000000_create_users_table',1),(62,'2014_10_12_100000_create_password_resets_table',1),(63,'2019_08_19_000000_create_failed_jobs_table',1),(64,'2020_08_10_200019_create_rule_table',1),(65,'2020_08_12_200223_create_user_rule_table',1),(66,'2020_08_29_001352_create_category_table',1),(67,'2020_08_29_001419_create_merk_table',1),(68,'2020_08_30_003413_create_models_table',1),(69,'2020_09_25_200317_create_barangmasuk_table',1),(70,'2020_09_25_203250_create_stock_table',1),(71,'2020_09_27_183559_create_barangkeluar_table',1),(72,'2020_10_17_075321_create_barang_retur_table',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,7 +299,7 @@ CREATE TABLE `rule` (
 
 LOCK TABLES `rule` WRITE;
 /*!40000 ALTER TABLE `rule` DISABLE KEYS */;
-INSERT INTO `rule` VALUES (1,'view_admin_data','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(2,'add_setting_parameter','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(3,'edit_admin_data','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(4,'set_rule','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(5,'view_barang_masuk','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(6,'tambah_barang_masuk','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(7,'view_barang_keluar','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(8,'tambah_barang_keluar','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(9,'print_invoice','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(10,'print_barcode','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(11,'set_stock_retur','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL),(12,'delete_stock','2020-10-31 01:02:13','2020-10-31 01:02:13',NULL);
+INSERT INTO `rule` VALUES (1,'view_admin_data','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(2,'add_setting_parameter','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(3,'edit_admin_data','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(4,'set_rule','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(5,'view_barang_masuk','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(6,'tambah_barang_masuk','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(7,'view_barang_keluar','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(8,'tambah_barang_keluar','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(9,'print_invoice','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(10,'print_barcode','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(11,'set_stock_retur','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL),(12,'delete_stock','2020-11-18 09:02:51','2020-11-18 09:02:51',NULL);
 /*!40000 ALTER TABLE `rule` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -404,6 +404,7 @@ CREATE TABLE `users` (
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `users_email_unique` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -415,7 +416,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','admin@gmail.com',NULL,'$2y$10$UwtfSuHbE4mawSiRVydXK.6u0qlMdDXYBsQqVNpwMxZCoPQOzih8m',2,NULL,'2020-10-31 01:02:12','2020-10-31 01:02:12');
+INSERT INTO `users` VALUES (1,'admin','admin@gmail.com',NULL,'$2y$10$l2kntHnprpwIubS8Bsj2Ce3fe0dA8Tt5FbXl.nFUFzMI3M1k/gkkO',2,NULL,'2020-11-18 09:02:51','2020-11-18 09:02:51',NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -428,4 +429,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-31 15:03:04
+-- Dump completed on 2020-11-18 23:03:40
