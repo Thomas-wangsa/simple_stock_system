@@ -316,12 +316,96 @@
     }
   }
 
-  $(document).ready(function() { 
+
+  function getParam(param){
+    return new URLSearchParams(window.location.search).get(param);
+  }
+
+  $(document).ready(function() {
+
     $.ajaxSetup({
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
+
+
+    url_param_merk = getParam("select_merk");
+
+    if(url_param_merk != undefined && url_param_merk!= "") {
+        category_select_tmp_value = $('#category_select').val();
+        data_raw_start_category =  {category_id:category_select_tmp_value };
+        $.ajax({
+          type : "POST",
+          url: " {{ route('ajax.get_merk') }}",
+          contentType: "application/json",
+          data : JSON.stringify(data_raw_start_category),
+          success: function(result) {
+            console.log(result);
+            response = JSON.parse(result);
+            console.log(response);
+            if(response.error == true) {
+              //alert(response.messages);
+            } else {
+              append_tag = "";
+              $.each(response.data, function( index, value ) {
+                append_tag += "<option value='"+value.id+"'";
+
+                if(value.id == url_param_merk) {
+                  append_tag += " selected ";
+                }
+
+                append_tag += ">";
+                append_tag += value.name;
+                append_tag += " </option>";
+              });
+              $("#merk_select").append(append_tag);
+            }
+          },  
+          error: function( jqXhr, textStatus, errorThrown ){
+              console.log( errorThrown );
+          }
+        });
+
+        url_param_model = getParam("select_model");
+        data_raw_start_merk =  {merk_id:url_param_merk };
+        $.ajax({
+          type : "POST",
+          url: " {{ route('ajax.get_models') }}",
+          contentType: "application/json",
+          data : JSON.stringify(data_raw_start_merk),
+          success: function(result) {
+            console.log(result);
+            response = JSON.parse(result);
+            console.log(response);
+            if(response.error == true) {
+              //alert(response.messages);
+            } else {
+              append_tag = "";
+              $.each(response.data, function( index, value ) {
+                //append_tag += "<option value='"+value.id+"'> "+value.name+" </option>";
+                append_tag += "<option value='"+value.id+"'";
+
+                if(url_param_model != undefined && url_param_model!= "") {
+                  if(value.id == url_param_model) {
+                    append_tag += " selected ";
+                  }
+                }
+
+                append_tag += ">";
+                append_tag += value.name;
+                append_tag += " </option>";
+              });
+              $("#models_select").append(append_tag);
+            }
+          },  
+          error: function( jqXhr, textStatus, errorThrown ){
+              console.log( errorThrown );
+          }
+        });
+    }
+
+    
 
     $('#category_select').on('change', function() {
       $('#merk_select').find('option').remove();
